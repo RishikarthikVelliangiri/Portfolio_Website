@@ -6,6 +6,7 @@ const Cursor = () => {
   const [hidden, setHidden] = useState(true);
   const [clicked, setClicked] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
+  const [overSpline, setOverSpline] = useState(false);
   
   useEffect(() => {
     const addEventListeners = () => {
@@ -26,6 +27,14 @@ const Cursor = () => {
     
     const onMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
+      
+      // Check if we're over a spline element
+      const element = document.elementFromPoint(e.clientX, e.clientY);
+      if (element && element.tagName.toLowerCase() === 'spline-viewer') {
+        setOverSpline(true);
+      } else {
+        setOverSpline(false);
+      }
     };
     
     const onMouseEnter = () => {
@@ -83,16 +92,21 @@ const Cursor = () => {
       <div
         className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 transition-transform duration-300 mix-blend-difference ${
           hidden ? 'opacity-0' : 'opacity-100'
-        } ${clicked ? 'scale-75' : ''} ${linkHovered ? 'scale-150' : ''}`}
+        } ${clicked ? 'scale-75' : ''} ${linkHovered ? 'scale-150' : ''} ${overSpline ? 'border-blue-500 scale-150' : ''}`}
         style={{
           transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,
-          border: '1px solid rgba(255, 255, 255, 0.8)',
+          border: overSpline 
+            ? '1px solid rgba(67, 97, 238, 0.8)'
+            : '1px solid rgba(255, 255, 255, 0.8)',
+          boxShadow: overSpline 
+            ? '0 0 10px rgba(67, 97, 238, 0.5), 0 0 20px rgba(67, 97, 238, 0.3)' 
+            : 'none'
         }}
       />
       <div
         className={`fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-50 transition-opacity duration-200 ${
           hidden ? 'opacity-0' : 'opacity-100'
-        }`}
+        } ${overSpline ? 'bg-blue-400' : ''}`}
         style={{
           transform: `translate(${position.x - 4}px, ${position.y - 4}px)`,
         }}

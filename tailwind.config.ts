@@ -62,7 +62,7 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['Outfit', 'Inter', 'sans-serif'],
 				display: ['Space Grotesk', 'sans-serif'],
 			},
 			borderRadius: {
