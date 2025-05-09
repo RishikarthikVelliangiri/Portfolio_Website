@@ -7,6 +7,10 @@ declare namespace JSX {
     'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
       url?: string;
       className?: string;
+      loading?: string;
+      events?: string;
+      noTitle?: boolean;
+      noFooter?: boolean;
     };
   }
 }

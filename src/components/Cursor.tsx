@@ -7,6 +7,7 @@ const Cursor = () => {
   const [clicked, setClicked] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
   const [overSpline, setOverSpline] = useState(false);
+  const [interactionStrength, setInteractionStrength] = useState(0);
   
   useEffect(() => {
     const addEventListeners = () => {
@@ -32,8 +33,21 @@ const Cursor = () => {
       const element = document.elementFromPoint(e.clientX, e.clientY);
       if (element && element.tagName.toLowerCase() === 'spline-viewer') {
         setOverSpline(true);
+        
+        // Calculate interaction strength based on mouse movement speed
+        const now = Date.now();
+        if (prevTime && prevPosition) {
+          const dt = now - prevTime;
+          const dx = e.clientX - prevPosition.x;
+          const dy = e.clientY - prevPosition.y;
+          const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+          setInteractionStrength(Math.min(1, speed * 10));
+        }
+        prevTime = now;
+        prevPosition = { x: e.clientX, y: e.clientY };
       } else {
         setOverSpline(false);
+        setInteractionStrength(0);
       }
     };
     
@@ -58,6 +72,9 @@ const Cursor = () => {
       return (('ontouchstart' in window) ||
         (navigator.maxTouchPoints > 0));
     };
+    
+    let prevPosition: { x: number, y: number } | null = null;
+    let prevTime: number | null = null;
     
     if (!isTouchDevice()) {
       addEventListeners();
@@ -87,28 +104,35 @@ const Cursor = () => {
     return null;
   }
   
+  const glowSize = overSpline ? 20 + interactionStrength * 30 : 0;
+  const cursorScale = overSpline ? 1.5 + interactionStrength * 0.5 : clicked ? 0.75 : linkHovered ? 1.5 : 1;
+  
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 transition-transform duration-300 mix-blend-difference ${
+        className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 transition-all duration-300 mix-blend-difference ${
           hidden ? 'opacity-0' : 'opacity-100'
-        } ${clicked ? 'scale-75' : ''} ${linkHovered ? 'scale-150' : ''} ${overSpline ? 'border-blue-500 scale-150' : ''}`}
+        }`}
         style={{
-          transform: `translate(${position.x - 16}px, ${position.y - 16}px)`,
+          transform: `translate(${position.x - 16}px, ${position.y - 16}px) scale(${cursorScale})`,
           border: overSpline 
-            ? '1px solid rgba(67, 97, 238, 0.8)'
+            ? `1px solid rgba(67, 97, 238, ${0.8 + interactionStrength * 0.2})`
             : '1px solid rgba(255, 255, 255, 0.8)',
           boxShadow: overSpline 
-            ? '0 0 10px rgba(67, 97, 238, 0.5), 0 0 20px rgba(67, 97, 238, 0.3)' 
-            : 'none'
+            ? `0 0 ${glowSize}px rgba(67, 97, 238, 0.5), 0 0 ${glowSize * 2}px rgba(67, 97, 238, 0.3)` 
+            : 'none',
+          transition: 'transform 0.2s ease-out, border 0.3s ease, box-shadow 0.3s ease'
         }}
       />
       <div
-        className={`fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-50 transition-opacity duration-200 ${
+        className={`fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-50 transition-all duration-200 ${
           hidden ? 'opacity-0' : 'opacity-100'
-        } ${overSpline ? 'bg-blue-400' : ''}`}
+        }`}
         style={{
           transform: `translate(${position.x - 4}px, ${position.y - 4}px)`,
+          backgroundColor: overSpline 
+            ? `rgba(67, 97, 238, ${0.8 + interactionStrength * 0.2})` 
+            : 'white',
         }}
       />
     </>
