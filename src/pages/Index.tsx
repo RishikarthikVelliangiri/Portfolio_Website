@@ -1,12 +1,48 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useEffect } from 'react';
+import Header from '../components/Header';
+import HeroSection from '../components/HeroSection';
+import ProductsSection from '../components/ProductsSection';
+import VisionSection from '../components/VisionSection';
+import ContactSection from '../components/ContactSection';
+import Footer from '../components/Footer';
+import Cursor from '../components/Cursor';
 
 const Index = () => {
+  useEffect(() => {
+    // Smooth scroll to section when clicking on anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target && target.hash && target.hash.startsWith('#')) {
+        e.preventDefault();
+        const element = document.querySelector(target.hash);
+        if (element) {
+          window.scrollTo({
+            top: element.getBoundingClientRect().top + window.pageYOffset - 80, // Offset for header
+            behavior: 'smooth'
+          });
+        }
+      }
+    };
+    
+    document.addEventListener('click', handleAnchorClick as EventListener);
+    
+    return () => {
+      document.removeEventListener('click', handleAnchorClick as EventListener);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background text-foreground font-sans">
+      <Cursor />
+      <Header />
+      <main>
+        <HeroSection />
+        <ProductsSection />
+        <VisionSection />
+        <ContactSection />
+      </main>
+      <Footer />
     </div>
   );
 };
