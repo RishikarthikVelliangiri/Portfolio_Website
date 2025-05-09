@@ -68,6 +68,7 @@ const Index = () => {
       const particleViewer = document.createElement('spline-viewer');
       particleViewer.setAttribute('url', 'https://prod.spline.design/Apn06hWKowqeJc1s/scene.splinecode');
       particleViewer.className = 'w-full h-full';
+      particleViewer.setAttribute('noFooter', '');
       
       particleContainer.appendChild(particleViewer);
       productsSection.prepend(particleContainer);

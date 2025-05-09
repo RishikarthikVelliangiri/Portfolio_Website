@@ -95,14 +95,15 @@ const VisionSection = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-full blur-[100px] parallax"></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-full blur-[80px] parallax"></div>
       
-      {/* 3D Clarity Stream */}
+      {/* Replacing Clarity Stream with Particle Viewer */}
       <div 
         ref={splineRef} 
         className="absolute w-full h-full md:w-1/2 right-0 opacity-50 transition-all duration-700 ease-out z-0 transform scale-90"
       >
         <spline-viewer 
-          url="https://prod.spline.design/kp-IgSzU72CbjlHm/scene.splinecode"
+          url="https://prod.spline.design/Apn06hWKowqeJc1s/scene.splinecode"
           className="w-full h-full"
+          noFooter
         />
       </div>
       
