@@ -3,8 +3,6 @@ import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 const HeroSection = () => {
-  // We'll replace the canvas with the Spline viewer
-
   return (
     <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Spline 3D Nebula object as background */}
