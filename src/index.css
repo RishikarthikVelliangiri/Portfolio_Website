@@ -59,7 +59,7 @@
   }
   
   .glow {
-    text-shadow: 0 0 10px rgba(var(--neon-blue), 0.7);
+    text-shadow: 0 0 15px rgba(79, 70, 229, 0.7);
   }
 
   .glow-cyan {
@@ -111,9 +111,11 @@
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.6;
+    box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
   }
   50% {
     opacity: 1;
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.8);
   }
 }
 
@@ -137,6 +139,15 @@
   }
 }
 
+@keyframes shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -153,6 +164,17 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
+.animate-shine {
+  animation: shine 3s linear infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background-size: 200% 100%;
+}
+
+/* Custom styling for the spline viewer */
+spline-viewer {
+  @apply w-full h-full;
+}
+
 /* For scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
@@ -163,10 +185,50 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.5);
+  background: rgba(79, 70, 229, 0.5);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.8);
+  background: rgba(79, 70, 229, 0.8);
+}
+
+/* Enhance ProductCard to be more unique */
+.product-card-wrapper {
+  @apply relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.product-card {
+  @apply transition-all duration-500;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+}
+
+.product-card:hover {
+  transform: translateZ(20px);
+  box-shadow: 
+    0 10px 30px -15px rgba(79, 70, 229, 0.5),
+    0 0 10px rgba(79, 70, 229, 0.2);
+}
+
+/* Improving the Cursor component styles */
+.custom-cursor {
+  @apply fixed pointer-events-none z-50 rounded-full mix-blend-difference;
+  backdrop-filter: invert(1);
+}
+
+.cursor-outer {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.1s ease-out;
+}
+
+.cursor-inner {
+  width: 8px;
+  height: 8px;
+  background-color: #fff;
+  transition: transform 0.2s ease-out;
 }

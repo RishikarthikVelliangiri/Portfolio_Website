@@ -10,6 +10,12 @@ import Cursor from '../components/Cursor';
 
 const Index = () => {
   useEffect(() => {
+    // Load Spline viewer script
+    const splineScript = document.createElement('script');
+    splineScript.type = 'module';
+    splineScript.src = 'https://unpkg.com/@splinetool/viewer@1.9.92/build/spline-viewer.js';
+    document.head.appendChild(splineScript);
+    
     // Smooth scroll to section when clicking on anchor links
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLAnchorElement;
