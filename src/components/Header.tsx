@@ -1,14 +1,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
+import { motion, useTransform } from 'framer-motion';
 
-interface HeaderProps {
-  interactionMode?: boolean;
-}
-
-const Header = ({ interactionMode = false }: HeaderProps) => {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollY, scrollDirection } = useScrollAnimation();
+  
+  // Transform header styles based on scroll
+  const headerY = useTransform(
+    scrollY, 
+    [0, 100], 
+    [0, scrollDirection === 'up' ? 0 : -100]
+  );
+  
+  const headerOpacity = useTransform(
+    scrollY,
+    [0, 50],
+    [1, 0.95]
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +48,11 @@ const Header = ({ interactionMode = false }: HeaderProps) => {
   ];
 
   return (
-    <header 
+    <motion.header 
+      style={{ 
+        y: headerY,
+        opacity: headerOpacity
+      }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? 'bg-black/30 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-6'
       }`}
@@ -44,11 +60,6 @@ const Header = ({ interactionMode = false }: HeaderProps) => {
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <div className="flex items-center">
           <span className="text-2xl font-display font-bold text-gradient">RISHI</span>
-          {interactionMode && (
-            <span className="ml-3 text-xs bg-nebula-purple/70 text-white px-2 py-1 rounded-full backdrop-blur-sm">
-              Interaction Mode: ON
-            </span>
-          )}
         </div>
         
         {/* Desktop Navigation */}
@@ -103,7 +114,7 @@ const Header = ({ interactionMode = false }: HeaderProps) => {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 };
 

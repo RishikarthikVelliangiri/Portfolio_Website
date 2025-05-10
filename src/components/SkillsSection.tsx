@@ -1,6 +1,8 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useTransform } from 'framer-motion';
+import { useSectionAnimation } from '../hooks/useSectionAnimation';
+import SectionTransition from './SectionTransition';
 
 interface SkillBarProps {
   name: string;
@@ -36,6 +38,8 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, proficiency, color = "bg-blue
 };
 
 const SkillsSection = () => {
+  const { ref, progress } = useSectionAnimation({ threshold: 0.1 });
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -55,6 +59,7 @@ const SkillsSection = () => {
     }
   };
   
+  // Updated skill sets based on the requested changes
   const skillSets = [
     {
       name: "Programming Languages & Technologies",
@@ -64,19 +69,18 @@ const SkillsSection = () => {
         { name: "Python", proficiency: 4, color: "bg-purple-500" },
         { name: "Java", proficiency: 3, color: "bg-pink-500" },
         { name: "Web Development (HTML, CSS, JavaScript)", proficiency: 4, color: "bg-blue-400" },
-        { name: "Artificial Intelligence", proficiency: 3, color: "bg-indigo-400" }
+        { name: "React JS", proficiency: 4, color: "bg-cyan-400" },
+        { name: "Artificial Intelligence", proficiency: 3, color: "bg-indigo-400" },
+        { name: "Unity", proficiency: 4, color: "bg-green-500" }
       ]
     },
     {
       name: "Computer Platforms & Software",
       skills: [
-        { name: "Canva", proficiency: 4, color: "bg-purple-400" },
-        { name: "Google Suite", proficiency: 5, color: "bg-blue-500" },
-        { name: "Unity", proficiency: 3, color: "bg-green-500" },
-        { name: "Excel", proficiency: 4, color: "bg-indigo-500" },
         { name: "DaVinci Editing Software", proficiency: 3, color: "bg-pink-500" },
         { name: "AWS services platform", proficiency: 3, color: "bg-orange-500" },
-        { name: "MySQL", proficiency: 4, color: "bg-blue-400" }
+        { name: "Azure Cloud Services", proficiency: 3, color: "bg-blue-600" },
+        { name: "Streamlit", proficiency: 3, color: "bg-red-500" }
       ]
     },
     {
@@ -87,10 +91,26 @@ const SkillsSection = () => {
     }
   ];
 
+  // Animation values based on section progress
+  const headingY = useTransform(progress, [0, 0.2], [50, 0]);
+  const headingOpacity = useTransform(progress, [0, 0.2], [0, 1]);
+  const cardsScale = useTransform(progress, [0.1, 0.3], [0.95, 1]);
+  const cardsOpacity = useTransform(progress, [0.1, 0.3], [0, 1]);
+
   return (
-    <section id="skills" className="py-24 bg-background relative overflow-hidden">
+    <section id="skills" ref={ref as React.RefObject<HTMLElement>} className="py-24 bg-background relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 bg-grid-pattern bg-[length:20px_20px] opacity-5"></div>
+      <SectionTransition 
+        position="top" 
+        startColor="rgba(0,0,0,0)" 
+        endColor="rgba(13,13,18,1)" 
+      />
+      <SectionTransition 
+        position="bottom" 
+        startColor="rgba(0,0,0,0)" 
+        endColor="rgba(13,13,18,1)" 
+      />
       
       <motion.div 
         className="container mx-auto px-4 md:px-6 relative z-10"
@@ -101,12 +121,22 @@ const SkillsSection = () => {
       >
         <motion.h2 
           className="text-3xl md:text-5xl font-display font-bold mb-12 text-center"
+          style={{ 
+            y: headingY,
+            opacity: headingOpacity
+          }}
           variants={itemVariants}
         >
           Technical <span className="text-gradient">Skills</span>
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          style={{
+            scale: cardsScale,
+            opacity: cardsOpacity
+          }}
+        >
           {skillSets.map((skillSet, index) => (
             <motion.div
               key={skillSet.name}
@@ -114,6 +144,10 @@ const SkillsSection = () => {
               className="glass-card p-6 rounded-xl backdrop-blur-md relative overflow-hidden group hover-card"
               whileHover={{
                 boxShadow: "0 0 25px rgba(79, 70, 229, 0.2)"
+              }}
+              style={{
+                transformOrigin: index === 0 ? 'left center' : index === 1 ? 'center center' : 'right center',
+                y: useTransform(progress, [0.2, 0.4], [50 * (index + 1), 0]),
               }}
             >
               {/* Ambient glow effect */}
@@ -143,12 +177,16 @@ const SkillsSection = () => {
               ></motion.div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
         
         {/* Skill Constellation */}
         <motion.div 
           className="mt-20 pt-10 relative"
           variants={itemVariants}
+          style={{
+            opacity: useTransform(progress, [0.6, 0.8], [0, 1]),
+            y: useTransform(progress, [0.6, 0.8], [50, 0]),
+          }}
         >
           <h3 className="text-2xl font-display font-semibold mb-8 text-center">Tools & Technologies</h3>
           
@@ -156,7 +194,7 @@ const SkillsSection = () => {
             {[
               "Audacity", "iMovie", "Notepad++", "XAMPP", "Microsoft Office", 
               "SpringBoot", "Maven", "Dev Containers", "HTML", "CSS", "JavaScript",
-              "React", "TailwindCSS", "Git", "GitHub", "Bootstrap"
+              "React", "TailwindCSS", "Git", "GitHub", "Bootstrap", "Streamlit", "Azure"
             ].map((tech, index) => (
               <motion.div
                 key={tech}
