@@ -1,12 +1,14 @@
 
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, MousePointer } from 'lucide-react';
 import * as THREE from 'three';
+import { motion } from 'framer-motion';
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const [isInteracting, setIsInteracting] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +19,7 @@ const HeroSection = () => {
       const sectionHeight = sectionRef.current.offsetHeight;
       
       // Parallax text movement
-      const translateY = scrollY * 0.4; // Adjust speed as needed
+      const translateY = scrollY * 0.4;
       textRef.current.style.transform = `translateY(${translateY}px)`;
       
       // Opacity based on scroll position
@@ -32,7 +34,19 @@ const HeroSection = () => {
       initThreeJS();
     }
     
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Handle keyboard interaction
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'i') {
+        setIsInteracting(prev => !prev);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleKeyPress);
+    };
   }, []);
 
   // Three.js initialization
@@ -49,78 +63,105 @@ const HeroSection = () => {
     
     canvasRef.current?.appendChild(renderer.domElement);
     
-    // Create ambient light
-    const ambientLight = new THREE.AmbientLight(0x333333);
+    // Enhanced lighting setup for futuristic effects
+    const ambientLight = new THREE.AmbientLight(0x222233);
     scene.add(ambientLight);
     
-    // Create directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
     
-    // Point lights for the futuristic glow effect
-    const purpleLight = new THREE.PointLight(0x9b87f5, 1, 50);
+    // More vibrant point lights for the futuristic glow effect
+    const purpleLight = new THREE.PointLight(0x9b87f5, 2, 50);
     purpleLight.position.set(-5, 2, 3);
     scene.add(purpleLight);
     
-    const pinkLight = new THREE.PointLight(0xff69b4, 1, 50);
+    const pinkLight = new THREE.PointLight(0xff69b4, 2, 50);
     pinkLight.position.set(5, -2, 3);
     scene.add(pinkLight);
     
-    const blueLight = new THREE.PointLight(0x33C3F0, 1, 50);
+    const blueLight = new THREE.PointLight(0x33C3F0, 2, 50);
     blueLight.position.set(0, 5, 3);
     scene.add(blueLight);
+
+    // CREATE MORE FUTURISTIC 3D ELEMENTS
     
-    // Create a futuristic toroid shape
-    const torusGeometry = new THREE.TorusGeometry(10, 3, 16, 100);
-    const torusMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x7E69AB,
-      metalness: 0.9,
-      roughness: 0.2,
-      transparent: true,
-      opacity: 0.8,
-      emissive: 0x7E69AB,
-      emissiveIntensity: 0.4
-    });
+    // Data visualization style elements - floating holographic rings
+    const ringGeometries = [];
+    const ringMaterials = [];
+    const rings = [];
     
-    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-    scene.add(torus);
-    
-    // Create a central sphere
-    const sphereGeometry = new THREE.SphereGeometry(5, 64, 64);
-    const sphereMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xD946EF,
-      metalness: 0.7,
-      roughness: 0.2,
-      transparent: true,
-      opacity: 0.7,
-      emissive: 0xD946EF,
-      emissiveIntensity: 0.4
-    });
-    
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    scene.add(sphere);
-    
-    // Create particles for a space-like effect
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 2000;
-    const posArray = new Float32Array(particlesCount * 3);
-    
-    for(let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 100;
+    for (let i = 0; i < 5; i++) {
+      const radius = 2 + i * 1.2;
+      const tubeWidth = 0.08;
+      const radialSegments = 16;
+      const tubularSegments = 100;
+      
+      ringGeometries[i] = new THREE.TorusGeometry(radius, tubeWidth, radialSegments, tubularSegments);
+      
+      // Different colors for each ring to create a holographic effect
+      const colors = [0x33C3F0, 0x9b87f5, 0xff69b4, 0x7E69AB, 0xD946EF];
+      
+      ringMaterials[i] = new THREE.MeshPhysicalMaterial({
+        color: colors[i],
+        metalness: 0.8,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.7,
+        emissive: colors[i],
+        emissiveIntensity: 0.5
+      });
+      
+      rings[i] = new THREE.Mesh(ringGeometries[i], ringMaterials[i]);
+      rings[i].rotation.x = Math.PI * 0.5;
+      rings[i].rotation.y = Math.random() * Math.PI * 2;
+      scene.add(rings[i]);
     }
     
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.1,
-      color: 0xD3E4FD,
+    // Add a central holographic core sphere
+    const coreGeometry = new THREE.IcosahedronGeometry(1.5, 4);
+    const coreMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xD946EF,
+      metalness: 0.9,
+      roughness: 0.1,
       transparent: true,
-      opacity: 0.7
+      opacity: 0.8,
+      emissive: 0xD946EF,
+      emissiveIntensity: 0.6,
+      wireframe: true
     });
     
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
+    const core = new THREE.Mesh(coreGeometry, coreMaterial);
+    scene.add(core);
+    
+    // Add holographic data points
+    const dataPointsGeometry = new THREE.BufferGeometry();
+    const dataPointsCount = 1000;
+    const dataPointsPositions = new Float32Array(dataPointsCount * 3);
+    
+    // Create a more structured arrangement of data points in a sphere-like formation
+    for (let i = 0; i < dataPointsCount; i++) {
+      const radius = 10 + Math.random() * 5;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      
+      dataPointsPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      dataPointsPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      dataPointsPositions[i * 3 + 2] = radius * Math.cos(phi);
+    }
+    
+    dataPointsGeometry.setAttribute('position', new THREE.BufferAttribute(dataPointsPositions, 3));
+    
+    const dataPointsMaterial = new THREE.PointsMaterial({
+      size: 0.15,
+      color: 0xD3E4FD,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending
+    });
+    
+    const dataPoints = new THREE.Points(dataPointsGeometry, dataPointsMaterial);
+    scene.add(dataPoints);
     
     camera.position.z = 30;
     
@@ -142,7 +183,7 @@ const HeroSection = () => {
     const windowHalfX = window.innerWidth / 2;
     const windowHalfY = window.innerHeight / 2;
     
-    const onDocumentMouseMove = (event: MouseEvent) => {
+    const onDocumentMouseMove = (event) => {
       mouseX = (event.clientX - windowHalfX) / 100;
       mouseY = (event.clientY - windowHalfY) / 100;
     };
@@ -157,23 +198,31 @@ const HeroSection = () => {
       targetX = mouseX * 0.2;
       targetY = mouseY * 0.2;
       
-      // Slowly rotate the torus and sphere
-      torus.rotation.x += 0.002;
-      torus.rotation.y += 0.003;
+      // Animate the rings
+      for (let i = 0; i < rings.length; i++) {
+        rings[i].rotation.z += 0.001 * (i + 1);
+        
+        // Add pulsating effect
+        const time = Date.now() * 0.001;
+        const scalePulse = Math.sin(time * (0.2 + i * 0.05)) * 0.05 + 1;
+        rings[i].scale.set(scalePulse, scalePulse, 1);
+        
+        // Move based on mouse
+        rings[i].position.x += (targetX * 0.2 - rings[i].position.x) * 0.01;
+        rings[i].position.y += (-targetY * 0.2 - rings[i].position.y) * 0.01;
+      }
       
-      sphere.rotation.x += 0.001;
-      sphere.rotation.y += 0.002;
+      // Animate the core
+      core.rotation.x += 0.005;
+      core.rotation.y += 0.007;
+      core.scale.x = core.scale.y = core.scale.z = Math.sin(Date.now() * 0.001) * 0.1 + 1;
       
-      // Move slightly based on mouse position
-      torus.position.x += (targetX - torus.position.x) * 0.05;
-      torus.position.y += (-targetY - torus.position.y) * 0.05;
+      // Animate data points
+      dataPoints.rotation.x += 0.0003;
+      dataPoints.rotation.y += 0.0005;
       
-      sphere.position.x += (targetX - sphere.position.x) * 0.03;
-      sphere.position.y += (-targetY - sphere.position.y) * 0.03;
-      
-      // Subtle particle rotation
-      particlesMesh.rotation.x += 0.0003;
-      particlesMesh.rotation.y += 0.0004;
+      // Create a subtle pulsating effect for data points
+      dataPointsMaterial.size = Math.sin(Date.now() * 0.001) * 0.03 + 0.15;
       
       renderer.render(scene, camera);
     };
@@ -186,18 +235,73 @@ const HeroSection = () => {
       document.removeEventListener('mousemove', onDocumentMouseMove);
       
       // Properly dispose resources
-      torusGeometry.dispose();
-      torusMaterial.dispose();
-      sphereGeometry.dispose();
-      sphereMaterial.dispose();
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
+      for (let i = 0; i < ringGeometries.length; i++) {
+        ringGeometries[i].dispose();
+        ringMaterials[i].dispose();
+      }
+      
+      coreGeometry.dispose();
+      coreMaterial.dispose();
+      dataPointsGeometry.dispose();
+      dataPointsMaterial.dispose();
       
       renderer.dispose();
       if (canvasRef.current && renderer.domElement) {
         canvasRef.current.removeChild(renderer.domElement);
       }
     };
+  };
+
+  // Text animation variants
+  const titleVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 100, 
+        damping: 10,
+        delay: 0.2
+      }
+    }
+  };
+  
+  const subtitleVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 50, 
+        damping: 8,
+        delay: 0.4
+      }
+    }
+  };
+  
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        type: "spring", 
+        stiffness: 50, 
+        damping: 8,
+        delay: 0.6
+      }
+    },
+    hover: {
+      scale: 1.05,
+      y: -5,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    }
   };
 
   return (
@@ -213,40 +317,134 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background z-[1]" />
       
       {/* Content */}
-      <div 
+      <motion.div 
         ref={textRef}
+        initial="hidden"
+        animate="visible"
         className="container mx-auto px-4 md:px-6 relative z-10 mt-[-80px] transition-all duration-500"
       >
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-7xl lg:text-8xl font-display font-bold mb-4 leading-tight tracking-tighter animate-fadeInUp">
-            <span className="text-gradient glow transform hover:scale-105 transition-transform duration-300 block">Visionary</span> 
-            <span className="transform translate-x-8 inline-block">Digital Craftsman</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 mt-4 leading-relaxed backdrop-blur-sm py-2 px-4 rounded-xl border border-white/10 transform hover:translate-y-[-5px] transition-all duration-300 animate-fadeInUp animation-delay-2000">
+          <motion.h1 
+            variants={titleVariants}
+            className="text-4xl md:text-7xl lg:text-8xl font-display font-bold mb-4 leading-tight tracking-tighter"
+          >
+            <motion.span 
+              className="text-gradient glow transform hover:scale-105 transition-transform duration-300 block"
+              whileHover={{ 
+                scale: 1.05,
+                textShadow: "0 0 25px rgba(79, 70, 229, 0.8)" 
+              }}
+            >
+              Visionary
+            </motion.span> 
+            <motion.span 
+              className="transform translate-x-8 inline-block"
+              whileHover={{ 
+                x: 40,
+                transition: { type: "spring", stiffness: 300 }
+              }}
+            >
+              Digital Craftsman
+            </motion.span>
+          </motion.h1>
+          
+          <motion.p 
+            variants={subtitleVariants}
+            className="text-xl md:text-2xl text-gray-300 mb-8 mt-4 leading-relaxed backdrop-blur-sm py-2 px-4 rounded-xl border border-white/10 transform hover:translate-y-[-5px] transition-all duration-300"
+          >
             Pushing the boundaries of design with innovative digital experiences that inspire and transform.
-          </p>
-          <div className="flex flex-col md:flex-row gap-6 justify-start animate-fadeInUp animation-delay-4000">
-            <a href="#products" className="group relative overflow-hidden rounded-lg btn-primary flex items-center justify-center gap-2 transform hover:translate-y-[-5px] transition-all duration-300">
+          </motion.p>
+          
+          <motion.div 
+            variants={buttonVariants}
+            className="flex flex-col md:flex-row gap-6 justify-start"
+          >
+            <motion.a 
+              href="#products"
+              variants={buttonVariants}
+              whileHover="hover"
+              className="group relative overflow-hidden rounded-lg btn-primary flex items-center justify-center gap-2"
+            >
               <span className="relative z-10">Explore My Work</span>
               <ArrowRight size={16} className="relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-100 group-hover:opacity-90 transition-opacity duration-300"></div>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.8)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform group-hover:scale-150"></div>
-            </a>
-            <a href="#vision" className="px-6 py-3 border border-white/20 backdrop-blur-sm rounded-lg font-medium transition-all duration-300 hover:border-white/40 hover:bg-white/5 transform hover:translate-y-[-5px] relative overflow-hidden group">
+              <motion.div 
+                className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.8)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                animate={{
+                  scale: isInteracting ? [1, 1.2, 1] : 1
+                }}
+                transition={{
+                  repeat: isInteracting ? Infinity : 0,
+                  duration: 2
+                }}
+              ></motion.div>
+            </motion.a>
+            
+            <motion.a 
+              href="#vision"
+              variants={buttonVariants}
+              whileHover="hover"
+              className="px-6 py-3 border border-white/20 backdrop-blur-sm rounded-lg font-medium relative overflow-hidden group"
+            >
               <span className="relative z-10">My Vision</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-x-full group-hover:translate-x-full"></div>
-            </a>
-          </div>
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100"
+                animate={{ x: ['100%', '-100%'] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: "linear"
+                }}
+              ></motion.div>
+            </motion.a>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
       
-      {/* Dynamic cursor indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:flex flex-col items-center gap-2">
-        <p className="text-sm text-white/70">Interact with the scene</p>
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center items-start p-1">
-          <div className="w-1 h-2 bg-white/80 rounded-full animate-pulse-glow"></div>
-        </div>
-      </div>
+      {/* Interaction indicator */}
+      <motion.div 
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ 
+          opacity: 1, 
+          y: [0, -10, 0],
+          transition: {
+            y: {
+              repeat: Infinity,
+              duration: 2,
+              ease: "easeInOut"
+            },
+            opacity: {
+              duration: 0.6
+            }
+          }
+        }}
+      >
+        <motion.p 
+          className="text-sm text-white/70 font-medium px-3 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/10"
+          whileHover={{ 
+            scale: 1.05,
+            boxShadow: "0 0 15px rgba(79, 70, 229, 0.5)"
+          }}
+        >
+          Press "I" to interact with the scene
+        </motion.p>
+        <motion.div 
+          className="flex items-center justify-center h-8 w-8 rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
+          animate={{
+            boxShadow: isInteracting 
+              ? ["0 0 5px rgba(79, 70, 229, 0.3)", "0 0 20px rgba(79, 70, 229, 0.8)", "0 0 5px rgba(79, 70, 229, 0.3)"]
+              : "0 0 5px rgba(79, 70, 229, 0.3)"
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        >
+          <MousePointer size={14} className="text-white/80" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
