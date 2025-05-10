@@ -5,7 +5,6 @@ import HeroSection from '../components/HeroSection';
 import ProductsSection from '../components/ProductsSection';
 import VisionSection from '../components/VisionSection';
 import ContactSection from '../components/ContactSection';
-import Footer from '../components/Footer';
 import Cursor from '../components/Cursor';
 import { motion } from 'framer-motion';
 import AboutSection from '../components/AboutSection';
@@ -86,7 +85,7 @@ const Index = () => {
         <VisionSection />
         <ContactSection />
       </main>
-      <Footer />
+      {/* Footer removed as requested */}
     </motion.div>
   );
 };

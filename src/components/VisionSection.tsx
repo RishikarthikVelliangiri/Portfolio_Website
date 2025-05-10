@@ -1,5 +1,7 @@
+
 import React, { useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { motion } from 'framer-motion';
 
 const VisionSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -81,6 +83,20 @@ const VisionSection = () => {
     };
   }, []);
 
+  // Animation variants for elements
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
+
   return (
     <section id="vision" ref={sectionRef} className="py-24 min-h-screen relative overflow-hidden bg-gradient-to-b from-background via-blue-950/20 to-background flex items-center">
       {/* Abstract shapes with futuristic colors */}
@@ -105,7 +121,7 @@ const VisionSection = () => {
               </h2>
               
               <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-                Creating digital experiences that transcend the ordinary and challenge the boundaries of what's possible.
+                Innovating at the intersection of software development and artificial intelligence to create impactful digital experiences.
               </p>
               
               <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mb-8"></div>
@@ -116,9 +132,9 @@ const VisionSection = () => {
                 </div>
                 <div className="w-full h-full backdrop-blur-md bg-black/20 p-6 flex items-center justify-center z-10 relative">
                   <div className="text-center">
-                    <span className="block text-4xl font-display font-bold mb-1">10+</span>
+                    <span className="block text-4xl font-display font-bold mb-1">3+</span>
                     <span className="block text-sm uppercase tracking-wide text-gray-400">Years of Crafting</span>
-                    <span className="block text-sm uppercase tracking-wide text-gradient font-medium">Digital Experiences</span>
+                    <span className="block text-sm uppercase tracking-wide text-gradient font-medium">Digital Solutions</span>
                   </div>
                 </div>
               </div>
@@ -129,17 +145,23 @@ const VisionSection = () => {
           <div className="md:col-span-3 relative z-10">
             <ScrollArea className="h-[70vh] pr-4 rounded-md">
               <div className="space-y-16">
-                <div className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden">
+                <motion.div 
+                  className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden"
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
                   {/* Decorative grid */}
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                   
                   <div className="relative">
-                    <h3 className="text-2xl font-display font-medium mb-4 text-gradient">Pushing Boundaries</h3>
+                    <h3 className="text-2xl font-display font-medium mb-4 text-gradient">My Journey</h3>
                     <p className="text-gray-300 leading-relaxed mb-6">
-                      I believe in challenging the status quo and pushing the boundaries of what's possible in digital experiences. As a visionary and innovator, I'm committed to creating work that not only meets the needs of today but anticipates the demands of tomorrow.
+                      As a hands-on Computer Science student at Flame University, I'm passionate about using technology to solve real-world problems. My intermediate knowledge of full-stack and web-based applications gives me a strong foundation to build innovative solutions.
                     </p>
                     <p className="text-gray-300 leading-relaxed">
-                      Through a combination of cutting-edge technology, human-centered design principles, and a deep understanding of user psychology, I create digital experiences that captivate, inspire, and transform.
+                      Throughout my journey from Ebenezer International School to Flame University, I've consistently sought opportunities to expand my knowledge in rapidly evolving tech fields. My work at Mandrake Technology and experiences across various internships have shaped me into a versatile problem-solver with both technical depth and strategic vision.
                     </p>
                     
                     <div className="mt-8 flex justify-end">
@@ -151,9 +173,15 @@ const VisionSection = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
                 
-                <div className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden">
+                <motion.div 
+                  className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden"
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                   
                   <div className="relative">
@@ -208,40 +236,46 @@ const VisionSection = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
                 
-                <div className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden">
+                <motion.div 
+                  className="bg-black/30 backdrop-blur-sm rounded-3xl neon-border p-6 md:p-8 relative overflow-hidden"
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
                   
                   <div className="relative">
                     <h3 className="text-2xl font-display font-medium mb-4 text-gradient">Philosophy</h3>
                     <p className="text-gray-300 leading-relaxed mb-6">
-                      I believe that exceptional design is never a coincidence. It's the result of thoughtful intention, deep empathy, and relentless curiosity. My work is guided by these key principles:
+                      As an innovative change agent with both high-level technology direction and deep technical expertise, I believe that exceptional technology solutions emerge from a blend of creative thinking and disciplined execution.
                     </p>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                       <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/10">
                         <h4 className="text-lg font-medium mb-2">Purpose-Driven</h4>
-                        <p className="text-gray-400 text-sm">Every design decision serves a clear purpose that advances both user and business goals.</p>
+                        <p className="text-gray-400 text-sm">Every design and development decision I make serves a clear purpose aimed at creating meaningful impact through technology.</p>
                       </div>
                       
                       <div className="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/10">
                         <h4 className="text-lg font-medium mb-2">Human-Centered</h4>
-                        <p className="text-gray-400 text-sm">I design for people first, creating experiences that resonate on a human level.</p>
+                        <p className="text-gray-400 text-sm">I design for people first, creating experiences that solve real problems and resonate on a human level.</p>
                       </div>
                       
                       <div className="p-4 rounded-xl bg-purple-950/20 border border-purple-500/10">
                         <h4 className="text-lg font-medium mb-2">Elegantly Simple</h4>
-                        <p className="text-gray-400 text-sm">I strive for the perfect balance of simplicity and functionality, removing unnecessary complexity.</p>
+                        <p className="text-gray-400 text-sm">I strive for the perfect balance of simplicity and functionality, removing unnecessary complexity in my solutions.</p>
                       </div>
                       
                       <div className="p-4 rounded-xl bg-pink-950/20 border border-pink-500/10">
                         <h4 className="text-lg font-medium mb-2">Future-Focused</h4>
-                        <p className="text-gray-400 text-sm">My designs anticipate future needs and technologies, building for longevity and sustainability.</p>
+                        <p className="text-gray-400 text-sm">My work anticipates future needs and technologies, building for longevity and adaptability in a rapidly changing digital landscape.</p>
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </div>
             </ScrollArea>
           </div>

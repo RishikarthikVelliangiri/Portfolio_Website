@@ -43,7 +43,7 @@ const Header = ({ interactionMode = false }: HeaderProps) => {
     >
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <div className="flex items-center">
-          <span className="text-2xl font-display font-bold text-gradient">AURA</span>
+          <span className="text-2xl font-display font-bold text-gradient">RISHI</span>
           {interactionMode && (
             <span className="ml-3 text-xs bg-nebula-purple/70 text-white px-2 py-1 rounded-full backdrop-blur-sm">
               Interaction Mode: ON

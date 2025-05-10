@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Eye, ArrowUpRight, Github, ExternalLink } from 'lucide-react';
+import { Eye, ArrowUpRight, Github, ExternalLink, Gamepad2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export interface Product {
@@ -11,6 +11,7 @@ export interface Product {
   description: string;
   link?: string;
   github?: string;
+  status?: string;
 }
 
 interface ProductCardProps {
@@ -76,6 +77,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.category}
           </span>
         </div>
+        
+        {/* Development status tag */}
+        {product.status && (
+          <div className="absolute top-4 right-4">
+            <span className="px-3 py-1 text-xs bg-blue-500/30 backdrop-blur-sm rounded-full border border-blue-400/30 text-blue-300 animate-pulse">
+              {product.status}
+            </span>
+          </div>
+        )}
       </div>
       
       <div className="p-4 md:p-6">

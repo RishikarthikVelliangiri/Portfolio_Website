@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import ProductCard, { Product } from './ProductCard';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, Code } from 'lucide-react';
+import { ExternalLink, Github, Code, Gamepad2, FileText } from 'lucide-react';
 
 // Real projects data
 const projects: Product[] = [
@@ -42,17 +42,20 @@ const projects: Product[] = [
   },
   {
     id: '5',
-    title: 'Coming Soon',
-    category: 'Future Project',
-    imageUrl: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    description: 'An exciting new project in development. Stay tuned for updates!'
+    title: 'VR Goalkeeper Simulator',
+    category: 'VR Game',
+    imageUrl: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    description: 'A goalkeeper game designed for VR headsets using Unity. Users load into a menu to start the game and must block 10 penalty shots to obtain a high score.',
+    github: 'https://github.com/RishikarthikVelliangiri/Graphics_Unity',
+    status: 'Under Development'
   },
   {
     id: '6',
-    title: 'In Development',
-    category: 'Research',
-    imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    description: 'A research-oriented project exploring new technologies and methodologies.'
+    title: 'PDF Chatbot',
+    category: 'AI Tool',
+    imageUrl: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    description: 'A chat-based software using Gemini API and Pinecone vector database. Upload a PDF and the AI answers questions based on the document content. Supports multiple chats.',
+    github: 'https://github.com/RishikarthikVelliangiri/PDF_Chatbot'
   }
 ];
 
