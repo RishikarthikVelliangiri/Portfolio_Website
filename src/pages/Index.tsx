@@ -12,12 +12,6 @@ const Index = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // Load Spline viewer script
-    const splineScript = document.createElement('script');
-    splineScript.type = 'module';
-    splineScript.src = 'https://unpkg.com/@splinetool/viewer@1.9.92/build/spline-viewer.js';
-    document.head.appendChild(splineScript);
-    
     // Smooth scroll to section when clicking on anchor links
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLAnchorElement;
@@ -58,21 +52,6 @@ const Index = () => {
     });
     
     document.addEventListener('click', handleAnchorClick as EventListener);
-    
-    // Initialize particle viewer in products section
-    const productsSection = document.getElementById('products');
-    if (productsSection) {
-      const particleContainer = document.createElement('div');
-      particleContainer.className = 'absolute inset-0 w-full h-full z-0 opacity-50';
-      
-      const particleViewer = document.createElement('spline-viewer');
-      particleViewer.setAttribute('url', 'https://prod.spline.design/Apn06hWKowqeJc1s/scene.splinecode');
-      particleViewer.className = 'w-full h-full';
-      particleViewer.setAttribute('noFooter', '');
-      
-      particleContainer.appendChild(particleViewer);
-      productsSection.prepend(particleContainer);
-    }
     
     return () => {
       document.removeEventListener('click', handleAnchorClick as EventListener);

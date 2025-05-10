@@ -1,10 +1,8 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const VisionSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  const splineRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -38,12 +36,6 @@ const VisionSection = () => {
           if (contentRef.current) {
             contentRef.current.style.opacity = opacity.toString();
             contentRef.current.style.transform = `translateY(${(1 - intersectionRatio) * 80}px)`;
-          }
-          
-          // Animate spline element
-          if (splineRef.current) {
-            splineRef.current.style.transform = `scale(${0.8 + intersectionRatio * 0.2})`;
-            splineRef.current.style.opacity = (0.5 + intersectionRatio * 0.5).toString();
           }
           
           // Handle parallax elements
@@ -91,21 +83,14 @@ const VisionSection = () => {
 
   return (
     <section id="vision" ref={sectionRef} className="py-24 min-h-screen relative overflow-hidden bg-gradient-to-b from-background via-blue-950/20 to-background flex items-center">
-      {/* Abstract shapes */}
+      {/* Abstract shapes with futuristic colors */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-full blur-[100px] parallax"></div>
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-full blur-[80px] parallax"></div>
+      <div className="absolute top-1/2 left-1/3 w-52 h-52 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-full blur-[60px] parallax"></div>
+      <div className="absolute bottom-1/3 right-1/3 w-72 h-72 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-[70px] parallax"></div>
       
-      {/* Replacing Clarity Stream with Particle Viewer */}
-      <div 
-        ref={splineRef} 
-        className="absolute w-full h-full md:w-1/2 right-0 opacity-50 transition-all duration-700 ease-out z-0 transform scale-90"
-      >
-        <spline-viewer 
-          url="https://prod.spline.design/Apn06hWKowqeJc1s/scene.splinecode"
-          className="w-full h-full"
-          noFooter
-        />
-      </div>
+      {/* Futuristic background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(155,135,245,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(155,135,245,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
       
       <div className="container mx-auto px-4 md:px-6 relative">
         <div 
