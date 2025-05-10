@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   interactionMode?: boolean;
@@ -28,8 +27,11 @@ const Header = ({ interactionMode = false }: HeaderProps) => {
 
   const navLinks = [
     { name: 'Home', href: '#hero' },
-    { name: 'Products', href: '#products' },
-    { name: 'Vision', href: '#vision' },
+    { name: 'About', href: '#about' },
+    { name: 'Skills', href: '#skills' },
+    { name: 'Experience', href: '#experience' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Education', href: '#education' },
     { name: 'Contact', href: '#contact' },
   ];
 

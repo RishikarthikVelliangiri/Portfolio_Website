@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -168,6 +169,58 @@
   .cyber-button:hover {
     @apply border-white/40 shadow-neon;
   }
+  
+  /* Skill levels visualization */
+  .skill-bar {
+    @apply h-2 bg-gray-800 rounded-full overflow-hidden relative;
+  }
+  
+  .skill-progress {
+    @apply h-full absolute left-0 top-0 rounded-full;
+    background: linear-gradient(90deg, #4361ee, #7209b7);
+  }
+  
+  /* Improved cards with angular cuts */
+  .angular-card {
+    @apply relative overflow-hidden;
+    clip-path: polygon(
+      0% 0%,
+      95% 0%,
+      100% 5%,
+      100% 100%,
+      5% 100%,
+      0% 95%
+    );
+  }
+  
+  /* 3D perspective cards */
+  .perspective-card {
+    @apply relative transition-all duration-500;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+  
+  .perspective-card:hover {
+    transform: rotateY(5deg) rotateX(5deg);
+  }
+  
+  /* Animated borders */
+  .animated-border {
+    @apply relative;
+  }
+  
+  .animated-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    background: linear-gradient(90deg, #4361ee, #7209b7, #f72585, #4361ee) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    background-size: 300% 100%;
+    animation: border-flow 4s linear infinite;
+  }
 }
 
 @layer utilities {
@@ -194,6 +247,24 @@
   .animate-neon-border {
     animation: neon-border-pulse 2s infinite alternate;
   }
+  
+  .bg-gradient-radial {
+    background: radial-gradient(circle at center, var(--tw-gradient-from), var(--tw-gradient-to));
+  }
+  
+  .staggered-fade-in > * {
+    opacity: 0;
+    animation: staggered-fade-in 0.5s ease forwards;
+  }
+  
+  .staggered-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
+  .staggered-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
+  .staggered-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
+  .staggered-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
+  .staggered-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
+  .staggered-fade-in > *:nth-child(6) { animation-delay: 0.6s; }
+  .staggered-fade-in > *:nth-child(7) { animation-delay: 0.7s; }
+  .staggered-fade-in > *:nth-child(8) { animation-delay: 0.8s; }
 }
 
 /* Enhanced Animations */
@@ -270,6 +341,26 @@
   }
   100% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes border-flow {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 300% 0;
+  }
+}
+
+@keyframes staggered-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

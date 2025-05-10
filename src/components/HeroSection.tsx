@@ -1,6 +1,6 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, MousePointer } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 
@@ -8,7 +8,6 @@ const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const [isInteracting, setIsInteracting] = useState(false);
   
   useEffect(() => {
     const handleScroll = () => {
@@ -34,18 +33,8 @@ const HeroSection = () => {
       initThreeJS();
     }
     
-    // Handle keyboard interaction
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'i') {
-        setIsInteracting(prev => !prev);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyPress);
-    
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('keydown', handleKeyPress);
     };
   }, []);
 
@@ -335,7 +324,7 @@ const HeroSection = () => {
                 textShadow: "0 0 25px rgba(79, 70, 229, 0.8)" 
               }}
             >
-              Visionary
+              Rishikarthik Velliangiri
             </motion.span> 
             <motion.span 
               className="transform translate-x-8 inline-block"
@@ -344,7 +333,7 @@ const HeroSection = () => {
                 transition: { type: "spring", stiffness: 300 }
               }}
             >
-              Digital Craftsman
+              Software Innovator
             </motion.span>
           </motion.h1>
           
@@ -352,7 +341,7 @@ const HeroSection = () => {
             variants={subtitleVariants}
             className="text-xl md:text-2xl text-gray-300 mb-8 mt-4 leading-relaxed backdrop-blur-sm py-2 px-4 rounded-xl border border-white/10 transform hover:translate-y-[-5px] transition-all duration-300"
           >
-            Pushing the boundaries of design with innovative digital experiences that inspire and transform.
+            Innovator in Software Solutions & AI. Pushing the boundaries with innovative digital experiences that inspire and transform.
           </motion.p>
           
           <motion.div 
@@ -360,7 +349,7 @@ const HeroSection = () => {
             className="flex flex-col md:flex-row gap-6 justify-start"
           >
             <motion.a 
-              href="#products"
+              href="#projects"
               variants={buttonVariants}
               whileHover="hover"
               className="group relative overflow-hidden rounded-lg btn-primary flex items-center justify-center gap-2"
@@ -371,22 +360,22 @@ const HeroSection = () => {
               <motion.div 
                 className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,119,198,0.8)_0%,rgba(0,0,0,0)_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 animate={{
-                  scale: isInteracting ? [1, 1.2, 1] : 1
+                  scale: [1, 1.2, 1]
                 }}
                 transition={{
-                  repeat: isInteracting ? Infinity : 0,
+                  repeat: Infinity,
                   duration: 2
                 }}
               ></motion.div>
             </motion.a>
             
             <motion.a 
-              href="#vision"
+              href="#about"
               variants={buttonVariants}
               whileHover="hover"
               className="px-6 py-3 border border-white/20 backdrop-blur-sm rounded-lg font-medium relative overflow-hidden group"
             >
-              <span className="relative z-10">My Vision</span>
+              <span className="relative z-10">About Me</span>
               <motion.div 
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100"
                 animate={{ x: ['100%', '-100%'] }}
@@ -399,51 +388,6 @@ const HeroSection = () => {
             </motion.a>
           </motion.div>
         </div>
-      </motion.div>
-      
-      {/* Interaction indicator */}
-      <motion.div 
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden md:flex flex-col items-center gap-2"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ 
-          opacity: 1, 
-          y: [0, -10, 0],
-          transition: {
-            y: {
-              repeat: Infinity,
-              duration: 2,
-              ease: "easeInOut"
-            },
-            opacity: {
-              duration: 0.6
-            }
-          }
-        }}
-      >
-        <motion.p 
-          className="text-sm text-white/70 font-medium px-3 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/10"
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 0 15px rgba(79, 70, 229, 0.5)"
-          }}
-        >
-          Press "I" to interact with the scene
-        </motion.p>
-        <motion.div 
-          className="flex items-center justify-center h-8 w-8 rounded-full border border-white/20 bg-black/20 backdrop-blur-md"
-          animate={{
-            boxShadow: isInteracting 
-              ? ["0 0 5px rgba(79, 70, 229, 0.3)", "0 0 20px rgba(79, 70, 229, 0.8)", "0 0 5px rgba(79, 70, 229, 0.3)"]
-              : "0 0 5px rgba(79, 70, 229, 0.3)"
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        >
-          <MousePointer size={14} className="text-white/80" />
-        </motion.div>
       </motion.div>
     </section>
   );
