@@ -36,6 +36,11 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    overscroll-behavior: none;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 }
 
@@ -176,5 +181,43 @@
     right: 15%;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+  
+  /* Shimmer animation */
+  @keyframes shimmer {
+    from {
+      background-position: -200% 0;
+    }
+    to {
+      background-position: 200% 0;
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 3s linear infinite;
+    background-size: 200% 100%;
+  }
+  
+  /* Scanner animation */
+  @keyframes scanner {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+  
+  .animate-scanner {
+    animation: scanner 2s ease-in-out infinite alternate;
+  }
+  
+  /* For better scroll performance */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
   }
 }

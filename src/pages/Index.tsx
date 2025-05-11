@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ProductsSection from '../components/ProductsSection';
@@ -12,9 +12,10 @@ import SkillsSection from '../components/SkillsSection';
 import ExperienceSection from '../components/ExperienceSection';
 import EducationSection from '../components/EducationSection';
 import AwardsSection from '../components/AwardsSection';
+import SectionBackgroundFade from '../components/SectionBackgroundFade';
 
 const Index = () => {
-  const pageRef = useRef<HTMLDivElement>(null);
+  const pageRef = React.useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     // Smooth scroll to section when clicking on anchor links
@@ -32,42 +33,17 @@ const Index = () => {
       }
     };
     
-    // Initialize Intersection Observer for scroll animations
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-    
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fadeInUp');
-          entry.target.classList.remove('opacity-0', 'translate-y-10');
-        }
-      });
-    };
-    
-    const observer = new IntersectionObserver(handleIntersect, observerOptions);
-    
-    // Observe all elements with the data-animate attribute
-    document.querySelectorAll('[data-animate]').forEach(el => {
-      el.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-700');
-      observer.observe(el);
-    });
-    
     document.addEventListener('click', handleAnchorClick as EventListener);
     
     return () => {
       document.removeEventListener('click', handleAnchorClick as EventListener);
-      observer.disconnect();
     };
   }, []);
 
   return (
     <motion.div 
       ref={pageRef} 
-      className="min-h-screen bg-background text-foreground font-sans"
+      className="min-h-screen bg-background text-foreground font-sans will-change-transform will-change-opacity"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -76,16 +52,83 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
+        
+        {/* Section transition between Hero and About */}
+        <SectionBackgroundFade
+          from="rgba(13,13,18,0)" 
+          to="rgba(13,13,18,1)"
+          position="bottom"
+          height={100}
+        />
+        
         <AboutSection />
+        
+        {/* Section transition between About and Skills */}
+        <SectionBackgroundFade
+          from="rgba(13,13,18,0.8)" 
+          to="rgba(12,10,29,0.8)"
+          position="top"
+          height={150}
+        />
+        
         <SkillsSection />
+        
+        {/* Section transition between Skills and Experience */}
+        <SectionBackgroundFade
+          from="rgba(12,10,29,0.8)" 
+          to="rgba(13,13,18,0.9)"
+          position="bottom"
+          height={150}
+        />
+        
         <ExperienceSection />
+        
+        {/* Continue with other section transitions */}
+        <SectionBackgroundFade
+          from="rgba(13,13,18,0.9)" 
+          to="rgba(16,16,28,0.8)"
+          position="bottom"
+          height={100}
+        />
+        
         <ProductsSection />
+        
+        <SectionBackgroundFade
+          from="rgba(16,16,28,0.8)" 
+          to="rgba(13,13,18,0.9)"
+          position="bottom"
+          height={100}
+        />
+        
         <EducationSection />
+        
+        <SectionBackgroundFade
+          from="rgba(13,13,18,0.9)" 
+          to="rgba(12,10,29,0.8)"
+          position="bottom"
+          height={100}
+        />
+        
         <AwardsSection />
+        
+        <SectionBackgroundFade
+          from="rgba(12,10,29,0.8)" 
+          to="rgba(9,9,18,1)"
+          position="bottom"
+          height={100}
+        />
+        
         <VisionSection />
+        
+        <SectionBackgroundFade
+          from="rgba(9,9,18,1)" 
+          to="rgba(13,13,18,1)"
+          position="bottom"
+          height={100}
+        />
+        
         <ContactSection />
       </main>
-      {/* Footer removed as requested */}
     </motion.div>
   );
 };

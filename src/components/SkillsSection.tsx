@@ -85,7 +85,7 @@ const SkillsSection = () => {
     {
       name: "Computer Platforms & Software",
       skills: [
-        { name: "DaVinci Editing Software", proficiency: 3, color: "bg-pink-500" },
+        { name: "Vercel", proficiency: 4, color: "bg-blue-600" },
         { name: "AWS services platform", proficiency: 3, color: "bg-orange-500" },
         { name: "Azure Cloud Services", proficiency: 3, color: "bg-blue-600" },
         { name: "Streamlit", proficiency: 3, color: "bg-red-500" }
@@ -117,8 +117,7 @@ const SkillsSection = () => {
       <motion.div 
         className="container mx-auto px-4 md:px-6 relative z-10"
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        animate={inView ? "visible" : "hidden"}
         variants={containerVariants}
       >
         <motion.h2 

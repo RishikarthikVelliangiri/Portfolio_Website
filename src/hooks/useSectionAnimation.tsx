@@ -1,12 +1,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
-import { useInView, useMotionValue } from 'framer-motion';
+import { useInView, useMotionValue, MotionValue } from 'framer-motion';
 
 interface SectionAnimationOptions {
   threshold?: number;
   once?: boolean;
-  rootMargin?: string;  // Changed from MarginType to string
+  rootMargin?: string;
   duration?: number;
 }
 
@@ -26,7 +26,6 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
   // Create a motion value to track progress
   const progressMotion = useMotionValue(0);
   
-  // Use proper type for margin
   const isInView = useInView(sectionRef, { 
     once, 
     amount: threshold,
