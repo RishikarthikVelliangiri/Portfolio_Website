@@ -2,22 +2,30 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
-import { motion, useTransform } from 'framer-motion';
+import { motion, useTransform, useMotionValue } from 'framer-motion';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY, scrollDirection } = useScrollAnimation();
   
+  // Create a local motion value for tracking scroll direction numeric value
+  const scrollDirectionValue = useMotionValue(0);
+  
+  // Update the motion value based on scroll direction
+  React.useEffect(() => {
+    scrollDirectionValue.set(scrollDirection === 'up' ? 0 : -100);
+  }, [scrollDirection, scrollDirectionValue]);
+  
   // Transform header styles based on scroll position
   const headerY = useTransform(
-    scrollY, // This is now a MotionValue from context, not a primitive number
+    scrollY, // This is now a MotionValue from context
     [0, 100], 
-    [0, scrollDirection === 'up' ? 0 : -100]
+    [0, scrollDirectionValue]
   );
   
   const headerOpacity = useTransform(
-    scrollY, // This is now a MotionValue from context, not a primitive number
+    scrollY, // This is now a MotionValue from context
     [0, 50],
     [1, 0.95]
   );

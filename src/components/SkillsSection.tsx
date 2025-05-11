@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { motion, useTransform } from 'framer-motion';
+import { motion, useTransform, useMotionValue } from 'framer-motion';
 import { useSectionAnimation } from '../hooks/useSectionAnimation';
 import SectionTransition from './SectionTransition';
 
@@ -39,6 +39,14 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, proficiency, color = "bg-blue
 
 const SkillsSection = () => {
   const { ref, progress, inView } = useSectionAnimation({ threshold: 0.1 });
+  
+  // Create MotionValues for animations
+  const progressMotionValue = useMotionValue(0);
+  
+  // Update the MotionValue when progress changes
+  React.useEffect(() => {
+    progressMotionValue.set(progress);
+  }, [progress, progressMotionValue]);
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -91,11 +99,11 @@ const SkillsSection = () => {
     }
   ];
 
-  // Animation values based on section progress - using a safe approach with derived values
-  const headingY = useTransform(progress, [0, 0.2], [50, 0]);
-  const headingOpacity = useTransform(progress, [0, 0.2], [0, 1]);
-  const cardsScale = useTransform(progress, [0.1, 0.3], [0.95, 1]);
-  const cardsOpacity = useTransform(progress, [0.1, 0.3], [0, 1]);
+  // Animation values based on section progress - using MotionValues
+  const headingY = useTransform(progressMotionValue, [0, 0.2], [50, 0]);
+  const headingOpacity = useTransform(progressMotionValue, [0, 0.2], [0, 1]);
+  const cardsScale = useTransform(progressMotionValue, [0.1, 0.3], [0.95, 1]);
+  const cardsOpacity = useTransform(progressMotionValue, [0.1, 0.3], [0, 1]);
 
   return (
     <section id="skills" ref={ref as React.RefObject<HTMLElement>} className="py-24 bg-background relative overflow-hidden">
@@ -147,7 +155,6 @@ const SkillsSection = () => {
               }}
               style={{
                 transformOrigin: index === 0 ? 'left center' : index === 1 ? 'center center' : 'right center',
-                y: useTransform(progress, [0.2, 0.4], [50 * (index + 1), 0]),
               }}
             >
               {/* Ambient glow effect */}
@@ -184,8 +191,8 @@ const SkillsSection = () => {
           className="mt-20 pt-10 relative"
           variants={itemVariants}
           style={{
-            opacity: useTransform(progress, [0.6, 0.8], [0, 1]),
-            y: useTransform(progress, [0.6, 0.8], [50, 0]),
+            opacity: useTransform(progressMotionValue, [0.6, 0.8], [0, 1]),
+            y: useTransform(progressMotionValue, [0.6, 0.8], [50, 0]),
           }}
         >
           <h3 className="text-2xl font-display font-semibold mb-8 text-center">Tools & Technologies</h3>

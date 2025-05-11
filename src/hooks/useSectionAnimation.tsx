@@ -2,11 +2,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
 import { useInView } from 'framer-motion';
+import type { MarginType } from 'framer-motion';
 
 interface SectionAnimationOptions {
   threshold?: number;
   once?: boolean;
-  rootMargin?: string;
+  rootMargin?: MarginType;
   duration?: number;
 }
 
