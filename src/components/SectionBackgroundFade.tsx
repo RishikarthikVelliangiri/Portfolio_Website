@@ -52,7 +52,7 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
         }}
       />
       
-      {/* Particles - changed color to white/neutral */}
+      {/* Particles - neutral colors */}
       {particles.map((_, index) => (
         <motion.div
           key={index}
@@ -75,7 +75,7 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
         />
       ))}
       
-      {/* Energy wisps - changed color to white/neutral */}
+      {/* Energy wisps - neutral colors */}
       {[1, 2, 3].map((i) => (
         <motion.div
           key={`wisp-${i}`}

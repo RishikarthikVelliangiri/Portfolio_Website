@@ -31,9 +31,8 @@ const AboutSection = () => {
     }
   };
   
-  // Animations based on scroll progress
+  // Animations based on scroll progress - removed rotate animation
   const profileImageScale = useTransform(progress, [0, 0.3], [0.9, 1]);
-  const profileImageRotate = useTransform(progress, [0, 0.3], [-5, 0]);
   const profileImageY = useTransform(progress, [0, 0.3], [30, 0]);
   const cardBgOpacity = useTransform(progress, [0.1, 0.5], [0, 0.8]);
   const glowOpacity = useTransform(progress, [0.2, 0.6], [0, 0.5]);
@@ -84,14 +83,13 @@ const AboutSection = () => {
           </motion.h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* Profile Image - Futuristic Card */}
+            {/* Profile Image - Removed rotation */}
             <motion.div 
               variants={itemVariants}
               className="md:col-span-1 flex justify-center"
               style={{
                 y: profileImageY,
-                scale: profileImageScale,
-                rotateZ: profileImageRotate
+                scale: profileImageScale
               }}
             >
               <div className="relative group">
@@ -236,10 +234,10 @@ const AboutSection = () => {
             </motion.div>
           </div>
           
-          {/* Contact quick info */}
+          {/* Contact quick info - fixed overlap by adding more margin-top */}
           <motion.div 
             variants={itemVariants}
-            className="mt-12 flex flex-wrap justify-center gap-4"
+            className="mt-16 flex flex-wrap justify-center gap-4"
           >
             <a 
               href="tel:+918431680193" 

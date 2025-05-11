@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
@@ -162,7 +163,7 @@ const HeroSection = () => {
     
     window.addEventListener('resize', handleResize);
     
-    // Mouse movement effect
+    // Mouse movement effect - Enhanced to make the entire 3D scene respond to cursor
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
@@ -172,8 +173,8 @@ const HeroSection = () => {
     const windowHalfY = window.innerHeight / 2;
     
     const onDocumentMouseMove = (event) => {
-      mouseX = (event.clientX - windowHalfX) / 100;
-      mouseY = (event.clientY - windowHalfY) / 100;
+      mouseX = (event.clientX - windowHalfX) / 50; // Made more responsive by reducing divisor
+      mouseY = (event.clientY - windowHalfY) / 50;
     };
     
     document.addEventListener('mousemove', onDocumentMouseMove);
@@ -182,9 +183,13 @@ const HeroSection = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       
-      // Smooth camera movement
-      targetX = mouseX * 0.2;
-      targetY = mouseY * 0.2;
+      // Smooth camera movement - more responsive to cursor
+      targetX = mouseX * 0.5; // Increased influence 
+      targetY = mouseY * 0.5;
+      
+      // Move the entire scene based on mouse position
+      scene.rotation.y += (targetX * 0.05 - scene.rotation.y) * 0.05;
+      scene.rotation.x += (-targetY * 0.05 - scene.rotation.x) * 0.05;
       
       // Animate the rings
       for (let i = 0; i < rings.length; i++) {
@@ -195,19 +200,23 @@ const HeroSection = () => {
         const scalePulse = Math.sin(time * (0.2 + i * 0.05)) * 0.05 + 1;
         rings[i].scale.set(scalePulse, scalePulse, 1);
         
-        // Move based on mouse
-        rings[i].position.x += (targetX * 0.2 - rings[i].position.x) * 0.01;
-        rings[i].position.y += (-targetY * 0.2 - rings[i].position.y) * 0.01;
+        // Enhanced cursor response for individual rings
+        rings[i].position.x += (targetX * 0.3 - rings[i].position.x) * 0.02;
+        rings[i].position.y += (-targetY * 0.3 - rings[i].position.y) * 0.02;
       }
       
-      // Animate the core
+      // Animate the core with enhanced cursor response
       core.rotation.x += 0.005;
       core.rotation.y += 0.007;
       core.scale.x = core.scale.y = core.scale.z = Math.sin(Date.now() * 0.001) * 0.1 + 1;
+      core.position.x += (targetX * 0.5 - core.position.x) * 0.03;
+      core.position.y += (-targetY * 0.5 - core.position.y) * 0.03;
       
-      // Animate data points
+      // Animate data points with cursor interaction
       dataPoints.rotation.x += 0.0003;
       dataPoints.rotation.y += 0.0005;
+      dataPoints.position.x += (targetX * 0.2 - dataPoints.position.x) * 0.01;
+      dataPoints.position.y += (-targetY * 0.2 - dataPoints.position.y) * 0.01;
       
       // Create a subtle pulsating effect for data points
       dataPointsMaterial.size = Math.sin(Date.now() * 0.001) * 0.03 + 0.15;
@@ -301,17 +310,17 @@ const HeroSection = () => {
       {/* Three.js canvas */}
       <div ref={canvasRef} className="absolute inset-0 w-full h-full z-0"></div>
       
-      {/* Overlay gradient to ensure text readability */}
+      {/* Overlay gradient to ensure text readability - removed blue hue */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background z-[1]" />
       
-      {/* Content - added px-8 for more horizontal padding */}
+      {/* Content - increased width to prevent text cutoff */}
       <motion.div 
         ref={textRef}
         initial="hidden"
         animate="visible"
-        className="container mx-auto px-6 md:px-8 lg:px-10 relative z-10 mt-[-60px] transition-all duration-500"
+        className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10 mt-[-40px] transition-all duration-500"
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto"> {/* Increased max width */}
           <motion.h1 
             variants={titleVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-4 leading-tight tracking-tighter"

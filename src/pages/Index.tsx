@@ -53,7 +53,7 @@ const Index = () => {
       <main className="relative overflow-hidden">
         <HeroSection />
         
-        {/* Improved section transitions with smoother blending */}
+        {/* Improved section transitions with smoother blending - removed blue hue */}
         <SectionBackgroundFade
           from="rgba(13,13,18,0)" 
           to="rgba(13,13,18,0.95)"
