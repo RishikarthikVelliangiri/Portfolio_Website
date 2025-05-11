@@ -1,13 +1,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
-import { useInView } from 'framer-motion';
-import type { MarginType } from 'framer-motion';
+import { useInView, useMotionValue } from 'framer-motion';
 
 interface SectionAnimationOptions {
   threshold?: number;
   once?: boolean;
-  rootMargin?: MarginType;
+  rootMargin?: string;  // Changed from MarginType to string
   duration?: number;
 }
 
@@ -24,7 +23,10 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
   const [progress, setProgress] = useState(0);
   const [inViewport, setInViewport] = useState(false);
   
-  // Fix the MarginType error by correctly typing rootMargin
+  // Create a motion value to track progress
+  const progressMotion = useMotionValue(0);
+  
+  // Use proper type for margin
   const isInView = useInView(sectionRef, { 
     once, 
     amount: threshold,
@@ -52,14 +54,15 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
       const clampedProgress = Math.max(0, Math.min(1, relativePosition));
       
       setProgress(clampedProgress);
+      progressMotion.set(clampedProgress); // Update motion value
     };
     
     calculateProgress();
-  }, [scrollY, inViewport]);
+  }, [scrollY, inViewport, progressMotion]);
   
   return { 
     ref: sectionRef, 
-    progress, 
+    progress: progressMotion, // Return the motion value instead of primitive number
     inView: inViewport 
   };
 };

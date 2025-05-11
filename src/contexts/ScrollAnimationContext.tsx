@@ -1,19 +1,19 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
-import { useMotionValue } from 'framer-motion';
+import { useMotionValue, MotionValue } from 'framer-motion';
 
 interface ScrollContextProps {
-  scrollY: any; // We need to use 'any' here to make TypeScript happy with both numeric and MotionValue usage
+  scrollY: MotionValue<number>; // Explicitly type as MotionValue
   scrollDirection: 'up' | 'down';
-  scrollProgress: any; // Same reason as above
+  scrollProgress: MotionValue<number>; // Explicitly type as MotionValue
   viewportHeight: number;
   isScrolling: boolean;
 }
 
 const ScrollAnimationContext = createContext<ScrollContextProps>({
-  scrollY: 0,
+  scrollY: {} as MotionValue<number>, // Type assertion for initial empty value
   scrollDirection: 'down',
-  scrollProgress: 0,
+  scrollProgress: {} as MotionValue<number>, // Type assertion for initial empty value
   viewportHeight: 0,
   isScrolling: false
 });
