@@ -30,7 +30,7 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, proficiency, color = "bg-blue
             delay: delay,
             ease: "easeOut"
           }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
         />
       </div>
     </div>
@@ -38,16 +38,12 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, proficiency, color = "bg-blue
 };
 
 const SkillsSection = () => {
-  const { ref, progress, inView } = useSectionAnimation({ threshold: 0.1 });
+  const { ref, progress, inView } = useSectionAnimation({ 
+    threshold: 0.1,
+    rootMargin: "-50px" 
+  });
   
-  // Animation values based on section progress - now progress is already a MotionValue
-  const headingY = useTransform(progress, [0, 0.2], [50, 0]);
-  const headingOpacity = useTransform(progress, [0, 0.2], [0, 1]);
-  const cardsScale = useTransform(progress, [0.1, 0.3], [0.95, 1]);
-  const cardsOpacity = useTransform(progress, [0.1, 0.3], [0, 1]);
-  const toolsOpacity = useTransform(progress, [0.6, 0.8], [0, 1]);
-  const toolsY = useTransform(progress, [0.6, 0.8], [50, 0]);
-
+  // Define static values for animations instead of using progress
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -63,7 +59,11 @@ const SkillsSection = () => {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
-      y: 0
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
     }
   };
   
@@ -122,10 +122,6 @@ const SkillsSection = () => {
       >
         <motion.h2 
           className="text-3xl md:text-5xl font-display font-bold mb-12 text-center"
-          style={{ 
-            y: headingY,
-            opacity: headingOpacity
-          }}
           variants={itemVariants}
         >
           Technical <span className="text-gradient">Skills</span>
@@ -133,10 +129,7 @@ const SkillsSection = () => {
 
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          style={{
-            scale: cardsScale,
-            opacity: cardsOpacity
-          }}
+          variants={containerVariants}
         >
           {skillSets.map((skillSet, index) => (
             <motion.div
@@ -149,6 +142,7 @@ const SkillsSection = () => {
               style={{
                 transformOrigin: index === 0 ? 'left center' : index === 1 ? 'center center' : 'right center',
               }}
+              viewport={{ once: true, margin: "-100px" }}
             >
               {/* Ambient glow effect */}
               <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
@@ -173,7 +167,7 @@ const SkillsSection = () => {
                 initial={{ width: "0%" }}
                 whileInView={{ width: "100%" }}
                 transition={{ duration: 1.5, delay: 0.5 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
               ></motion.div>
             </motion.div>
           ))}
@@ -183,10 +177,7 @@ const SkillsSection = () => {
         <motion.div 
           className="mt-20 pt-10 relative"
           variants={itemVariants}
-          style={{
-            opacity: toolsOpacity,
-            y: toolsY,
-          }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           <h3 className="text-2xl font-display font-semibold mb-8 text-center">Tools & Technologies</h3>
           
@@ -213,7 +204,7 @@ const SkillsSection = () => {
                   backgroundColor: "rgba(255,255,255,0.1)",
                   boxShadow: "0 0 15px rgba(79, 70, 229, 0.3)"
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
               >
                 {tech}
               </motion.div>

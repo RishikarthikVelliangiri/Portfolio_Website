@@ -23,12 +23,11 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
     offset: position === 'top' ? ["start end", "end start"] : ["end end", "start start"]
   });
   
-  // Create a gradient based on scroll position
-  // We use a non-linear easing to make the transition feel more natural
+  // Create a gradient based on scroll position with better easing
   const backgroundOpacity = useTransform(
     scrollYProgress,
     [0, 0.5, 1],  // Input range
-    [0, 0.5, 1],  // Output range
+    [0, 0.7, 1],  // Output range with higher mid-point for smoother fade
   );
   
   // Create particle effects

@@ -130,24 +130,13 @@ const AboutSection = () => {
                     
                     <div className="absolute inset-[2px] overflow-hidden rounded-lg bg-black">
                       <img 
-                        src="public/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
+                        src="/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
                         alt="Rishikarthik Velliangiri" 
                         className="w-full h-full object-cover"
                       />
                       
                       {/* Subtle overlay gradient */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                      
-                      {/* Animated scan line effect */}
-                      <motion.div 
-                        className="absolute h-[2px] left-0 right-0 bg-blue-400/30 blur-[2px]"
-                        animate={{ top: ["0%", "100%", "0%"] }}
-                        transition={{ 
-                          duration: 8, 
-                          ease: "linear",
-                          repeat: Infinity,
-                        }}
-                      />
                     </div>
                   </div>
                   
