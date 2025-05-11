@@ -26,10 +26,12 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
   // Create a motion value to track progress
   const progressMotion = useMotionValue(0);
   
+  // Correctly use the useInView hook without the margin property
+  // The rootMargin string format is not directly compatible with framer-motion's margin
   const isInView = useInView(sectionRef, { 
     once, 
-    amount: threshold,
-    margin: rootMargin
+    amount: threshold
+    // Removing the margin property as it's causing the type error
   });
   
   useEffect(() => {
@@ -46,14 +48,11 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
       const viewportHeight = window.innerHeight;
       
       // Calculate progress as the section moves through the viewport
-      // 0 = section just entered viewport bottom
-      // 0.5 = section is centered in viewport
-      // 1 = section is about to leave viewport top
       const relativePosition = (window.scrollY + viewportHeight - sectionTop) / (sectionHeight + viewportHeight);
       const clampedProgress = Math.max(0, Math.min(1, relativePosition));
       
       setProgress(clampedProgress);
-      progressMotion.set(clampedProgress); // Update motion value
+      progressMotion.set(clampedProgress);
     };
     
     calculateProgress();
@@ -61,7 +60,7 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
   
   return { 
     ref: sectionRef, 
-    progress: progressMotion, // Return the motion value instead of primitive number
+    progress: progressMotion,
     inView: inViewport 
   };
 };
