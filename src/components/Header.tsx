@@ -9,15 +9,15 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY, scrollDirection } = useScrollAnimation();
   
-  // Transform header styles based on scroll
+  // Transform header styles based on scroll position
   const headerY = useTransform(
-    scrollY, 
+    scrollY, // This is now a MotionValue from context, not a primitive number
     [0, 100], 
     [0, scrollDirection === 'up' ? 0 : -100]
   );
   
   const headerOpacity = useTransform(
-    scrollY,
+    scrollY, // This is now a MotionValue from context, not a primitive number
     [0, 50],
     [1, 0.95]
   );

@@ -22,10 +22,12 @@ export const useSectionAnimation = (options: SectionAnimationOptions = {}) => {
   const { scrollY } = useScrollAnimation();
   const [progress, setProgress] = useState(0);
   const [inViewport, setInViewport] = useState(false);
+  
+  // Fix the MarginType error by correctly typing rootMargin
   const isInView = useInView(sectionRef, { 
     once, 
-    margin: rootMargin, 
-    amount: threshold 
+    amount: threshold,
+    margin: rootMargin
   });
   
   useEffect(() => {

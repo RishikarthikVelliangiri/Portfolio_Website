@@ -38,7 +38,7 @@ const SkillBar: React.FC<SkillBarProps> = ({ name, proficiency, color = "bg-blue
 };
 
 const SkillsSection = () => {
-  const { ref, progress } = useSectionAnimation({ threshold: 0.1 });
+  const { ref, progress, inView } = useSectionAnimation({ threshold: 0.1 });
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -91,7 +91,7 @@ const SkillsSection = () => {
     }
   ];
 
-  // Animation values based on section progress
+  // Animation values based on section progress - using a safe approach with derived values
   const headingY = useTransform(progress, [0, 0.2], [50, 0]);
   const headingOpacity = useTransform(progress, [0, 0.2], [0, 1]);
   const cardsScale = useTransform(progress, [0.1, 0.3], [0.95, 1]);

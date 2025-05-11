@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { motion, useTransform, useScroll } from 'framer-motion';
+import { motion, useTransform, useScroll, MotionValue } from 'framer-motion';
 
 interface SectionTransitionProps {
   startColor?: string;

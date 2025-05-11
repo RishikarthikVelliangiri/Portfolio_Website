@@ -1,10 +1,11 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
+import { useMotionValue } from 'framer-motion';
 
 interface ScrollContextProps {
-  scrollY: number;
+  scrollY: any; // We need to use 'any' here to make TypeScript happy with both numeric and MotionValue usage
   scrollDirection: 'up' | 'down';
-  scrollProgress: number;
+  scrollProgress: any; // Same reason as above
   viewportHeight: number;
   isScrolling: boolean;
 }
@@ -20,10 +21,12 @@ const ScrollAnimationContext = createContext<ScrollContextProps>({
 export const useScrollAnimation = () => useContext(ScrollAnimationContext);
 
 export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [scrollY, setScrollY] = useState(0);
-  const [previousScrollY, setPreviousScrollY] = useState(0);
+  // Use Framer Motion's useMotionValue to create proper MotionValue objects
+  const scrollY = useMotionValue(0);
+  const scrollProgress = useMotionValue(0);
+
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [previousScrollY, setPreviousScrollY] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -31,7 +34,11 @@ export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ chi
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
+      
+      // Update the MotionValue objects
+      scrollY.set(currentScrollY);
+      
+      // Update direction
       setScrollDirection(currentScrollY > previousScrollY ? 'down' : 'up');
       setPreviousScrollY(currentScrollY);
       
@@ -45,7 +52,10 @@ export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ chi
       );
       const windowHeight = window.innerHeight;
       const scrollableDistance = docHeight - windowHeight;
-      setScrollProgress(currentScrollY / scrollableDistance);
+      const currentProgress = currentScrollY / scrollableDistance;
+      
+      // Update the progress MotionValue
+      scrollProgress.set(currentProgress);
       
       // Handle isScrolling state
       setIsScrolling(true);
@@ -63,7 +73,7 @@ export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ chi
     };
     
     handleResize();
-    handleScroll();
+    handleScroll(); // Initial call
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
@@ -75,7 +85,7 @@ export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ chi
         clearTimeout(scrollTimeout.current);
       }
     };
-  }, [previousScrollY]);
+  }, [previousScrollY, scrollY, scrollProgress]); // Added dependencies
   
   return (
     <ScrollAnimationContext.Provider value={{
