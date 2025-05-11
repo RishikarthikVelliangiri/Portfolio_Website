@@ -52,11 +52,11 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
         }}
       />
       
-      {/* Particles */}
+      {/* Particles - changed color to white/neutral */}
       {particles.map((_, index) => (
         <motion.div
           key={index}
-          className="absolute w-1 h-1 rounded-full bg-white/30 blur-[1px]"
+          className="absolute w-1 h-1 rounded-full bg-white/20 blur-[1px]"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -75,15 +75,15 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
         />
       ))}
       
-      {/* Energy wisps */}
+      {/* Energy wisps - changed color to white/neutral */}
       {[1, 2, 3].map((i) => (
         <motion.div
           key={`wisp-${i}`}
-          className="absolute h-20 left-0 w-full opacity-20"
+          className="absolute h-20 left-0 w-full opacity-10"
           style={{
             top: position === 'top' ? '50%' : undefined,
             bottom: position === 'bottom' ? '50%' : undefined,
-            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)'
+            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)'
           }}
           animate={{
             x: ['-100%', '100%'],

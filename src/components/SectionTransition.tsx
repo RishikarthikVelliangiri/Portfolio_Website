@@ -8,6 +8,7 @@ interface SectionTransitionProps {
   position?: 'top' | 'bottom' | 'both';
   height?: number | string;
   intensity?: number;
+  blur?: boolean;
 }
 
 const SectionTransition: React.FC<SectionTransitionProps> = ({
@@ -15,7 +16,8 @@ const SectionTransition: React.FC<SectionTransitionProps> = ({
   endColor = 'rgba(0,0,0,1)',
   position = 'bottom',
   height = 150,
-  intensity = 1
+  intensity = 1,
+  blur = false
 }) => {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(
@@ -33,6 +35,7 @@ const SectionTransition: React.FC<SectionTransitionProps> = ({
           position="top"
           height={height}
           intensity={intensity}
+          blur={blur}
         />
         <SectionTransition 
           startColor={startColor}
@@ -40,6 +43,7 @@ const SectionTransition: React.FC<SectionTransitionProps> = ({
           position="bottom"
           height={height}
           intensity={intensity}
+          blur={blur}
         />
       </>
     );
@@ -58,7 +62,8 @@ const SectionTransition: React.FC<SectionTransitionProps> = ({
           : `linear-gradient(to top, ${endColor}, ${startColor})`,
         opacity,
         pointerEvents: 'none',
-        zIndex: 5
+        zIndex: 5,
+        backdropFilter: blur ? 'blur(8px)' : 'none'
       }}
     />
   );

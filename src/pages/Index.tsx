@@ -50,81 +50,78 @@ const Index = () => {
     >
       <Cursor />
       <Header />
-      <main>
+      <main className="relative overflow-hidden">
         <HeroSection />
         
-        {/* Section transition between Hero and About */}
+        {/* Improved section transitions with smoother blending */}
         <SectionBackgroundFade
           from="rgba(13,13,18,0)" 
-          to="rgba(13,13,18,1)"
+          to="rgba(13,13,18,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <AboutSection />
         
-        {/* Section transition between About and Skills */}
         <SectionBackgroundFade
-          from="rgba(13,13,18,0.8)" 
-          to="rgba(12,10,29,0.8)"
+          from="rgba(13,13,18,0.6)" 
+          to="rgba(12,10,29,0.9)"
           position="top"
-          height={150}
+          height={180}
         />
         
         <SkillsSection />
         
-        {/* Section transition between Skills and Experience */}
         <SectionBackgroundFade
-          from="rgba(12,10,29,0.8)" 
-          to="rgba(13,13,18,0.9)"
+          from="rgba(12,10,29,0.7)" 
+          to="rgba(13,13,18,0.95)"
           position="bottom"
-          height={150}
+          height={180}
         />
         
         <ExperienceSection />
         
-        {/* Continue with other section transitions */}
         <SectionBackgroundFade
-          from="rgba(13,13,18,0.9)" 
-          to="rgba(16,16,28,0.8)"
+          from="rgba(13,13,18,0.7)" 
+          to="rgba(16,16,28,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <ProductsSection />
         
         <SectionBackgroundFade
-          from="rgba(16,16,28,0.8)" 
-          to="rgba(13,13,18,0.9)"
+          from="rgba(16,16,28,0.7)" 
+          to="rgba(13,13,18,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <EducationSection />
         
         <SectionBackgroundFade
-          from="rgba(13,13,18,0.9)" 
-          to="rgba(12,10,29,0.8)"
+          from="rgba(13,13,18,0.7)" 
+          to="rgba(12,10,29,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <AwardsSection />
         
         <SectionBackgroundFade
-          from="rgba(12,10,29,0.8)" 
-          to="rgba(9,9,18,1)"
+          from="rgba(12,10,29,0.7)" 
+          to="rgba(9,9,18,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <VisionSection />
         
         <SectionBackgroundFade
-          from="rgba(9,9,18,1)" 
-          to="rgba(13,13,18,1)"
+          from="rgba(9,9,18,0.7)" 
+          to="rgba(13,13,18,0.95)"
           position="bottom"
-          height={100}
+          height={120}
         />
         
         <ContactSection />

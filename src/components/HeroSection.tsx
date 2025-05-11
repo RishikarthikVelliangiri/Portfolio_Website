@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
@@ -305,20 +304,20 @@ const HeroSection = () => {
       {/* Overlay gradient to ensure text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background z-[1]" />
       
-      {/* Content */}
+      {/* Content - added px-8 for more horizontal padding */}
       <motion.div 
         ref={textRef}
         initial="hidden"
         animate="visible"
-        className="container mx-auto px-4 md:px-6 relative z-10 mt-[-80px] transition-all duration-500"
+        className="container mx-auto px-6 md:px-8 lg:px-10 relative z-10 mt-[-60px] transition-all duration-500"
       >
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <motion.h1 
             variants={titleVariants}
-            className="text-4xl md:text-7xl lg:text-8xl font-display font-bold mb-4 leading-tight tracking-tighter"
+            className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-4 leading-tight tracking-tighter"
           >
             <motion.span 
-              className="text-gradient glow transform hover:scale-105 transition-transform duration-300 block px-2"
+              className="text-gradient glow transform hover:scale-105 transition-transform duration-300 block px-3 py-1 overflow-visible"
               whileHover={{ 
                 scale: 1.05,
                 textShadow: "0 0 25px rgba(79, 70, 229, 0.8)" 
@@ -327,7 +326,7 @@ const HeroSection = () => {
               Rishikarthik Velliangiri
             </motion.span> 
             <motion.span 
-              className="transform translate-x-8 inline-block mt-2"
+              className="transform translate-x-8 inline-block mt-3"
               whileHover={{ 
                 x: 40,
                 transition: { type: "spring", stiffness: 300 }

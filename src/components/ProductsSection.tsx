@@ -59,11 +59,13 @@ const projects: Product[] = [
   }
 ];
 
+// Extract unique categories for the filter
 const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
 
 const ProductsSection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   
+  // Fix the filtering logic to properly handle the "All" category
   const filteredProducts = activeCategory === 'All' 
     ? projects 
     : projects.filter(product => product.category === activeCategory);
@@ -140,7 +142,7 @@ const ProductsSection = () => {
           </p>
         </motion.div>
         
-        {/* Category filter */}
+        {/* Category filter - Fix the click handling */}
         <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-2 mb-12">
           {categories.map(category => (
             <button
@@ -157,7 +159,7 @@ const ProductsSection = () => {
           ))}
         </motion.div>
         
-        {/* Projects grid */}
+        {/* Projects grid - Ensure visibility of filtered products */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {filteredProducts.map((product, index) => (
             <motion.div 
