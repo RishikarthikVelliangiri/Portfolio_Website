@@ -102,16 +102,15 @@ const SkillsSection = () => {
   return (
     <section id="skills" ref={ref as React.RefObject<HTMLElement>} className="py-24 bg-background relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-grid-pattern bg-[length:20px_20px] opacity-5"></div>
-      <SectionTransition 
+      <div className="absolute inset-0 bg-grid-pattern bg-[length:20px_20px] opacity-5"></div>      <SectionTransition 
         position="top" 
         startColor="rgba(0,0,0,0)" 
-        endColor="rgba(13,13,18,1)" 
+        endColor="rgba(0,0,0,1)" 
       />
       <SectionTransition 
         position="bottom" 
         startColor="rgba(0,0,0,0)" 
-        endColor="rgba(13,13,18,1)" 
+        endColor="rgba(0,0,0,1)" 
       />
       
       <motion.div 
@@ -131,21 +130,26 @@ const SkillsSection = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
         >
-          {skillSets.map((skillSet, index) => (
-            <motion.div
+          {skillSets.map((skillSet, index) => (              <motion.div
               key={skillSet.name}
               variants={itemVariants}
               className="glass-card p-6 rounded-xl backdrop-blur-md relative overflow-hidden group hover-card"
               whileHover={{
-                boxShadow: "0 0 25px rgba(79, 70, 229, 0.2)"
+                boxShadow: "0 0 25px rgba(148, 93, 219, 0.4)"
               }}
+              initial={{ boxShadow: "0 0 10px rgba(148, 93, 219, 0.2)" }}
               style={{
                 transformOrigin: index === 0 ? 'left center' : index === 1 ? 'center center' : 'right center',
               }}
               viewport={{ once: true, margin: "-100px" }}
-            >
-              {/* Ambient glow effect */}
-              <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            >              {/* Ambient glow effect - enhanced purple glow */}
+              <div className="absolute inset-0 bg-gradient-radial from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 mix-blend-normal"></div>
+              {/* Left border glow */}
+              <div className="absolute left-0 top-0 w-0.5 h-full bg-purple-500/30 shadow-[0_0_8px_rgba(148,93,219,0.5)]"></div>
+              {/* Right border glow */}
+              <div className="absolute right-0 top-0 w-0.5 h-full bg-purple-500/30 shadow-[0_0_8px_rgba(148,93,219,0.5)]"></div>
+              {/* Top border glow */}
+              <div className="absolute top-0 left-0 w-full h-0.5 bg-purple-500/30 shadow-[0_0_8px_rgba(148,93,219,0.5)]"></div>
               
               <h3 className="text-xl font-display font-semibold mb-6 text-gradient">{skillSet.name}</h3>
               
@@ -160,10 +164,8 @@ const SkillsSection = () => {
                   />
                 ))}
               </div>
-              
-              {/* Bottom border glow */}
-              <motion.div 
-                className="absolute bottom-0 left-0 h-0.5 bg-blue-500"
+                {/* Bottom border glow - changed from blue to purple */}              <motion.div 
+                className="absolute bottom-0 left-0 h-0.5 bg-purple-500 shadow-[0_0_10px_1px_rgba(148,93,219,0.7)]"
                 initial={{ width: "0%" }}
                 whileInView={{ width: "100%" }}
                 transition={{ duration: 1.5, delay: 0.5 }}

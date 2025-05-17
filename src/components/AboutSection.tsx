@@ -36,14 +36,21 @@ const AboutSection = () => {
   const profileImageY = useTransform(progress, [0, 0.3], [30, 0]);
   const cardBgOpacity = useTransform(progress, [0.1, 0.5], [0, 0.8]);
   const glowOpacity = useTransform(progress, [0.2, 0.6], [0, 0.5]);
-  const contentY = useTransform(progress, [0.1, 0.4], [50, 0]);
-
-  return (
-    <section id="about" ref={ref} className="py-24 bg-background relative overflow-hidden">
+  const contentY = useTransform(progress, [0.1, 0.4], [50, 0]);  return (
+    <section 
+      id="about" 
+      ref={ref} 
+      className="py-24 bg-black relative overflow-hidden"
+      style={{ 
+        backgroundColor: "#000000",
+        marginTop: "-2px", /* Connect seamlessly with hero section */
+        paddingTop: "60px"  /* Add some extra padding to replace the gap */
+      }}
+    >
       {/* Background effects */}
       <div className="absolute inset-0 bg-grid-pattern bg-[length:30px_30px] opacity-10 z-0"></div>
       <motion.div 
-        className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+        className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
         animate={{
           scale: [1, 1.1, 1],
           opacity: [0.3, 0.2, 0.3]
@@ -126,9 +133,8 @@ const AboutSection = () => {
                     {/* Animated holographic border */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-gradient-shift"></div>
                     
-                    <div className="absolute inset-[2px] overflow-hidden rounded-lg bg-black">
-                      <img 
-                        src="/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
+                    <div className="absolute inset-[2px] overflow-hidden rounded-lg bg-black">                      <img 
+                        src="/public/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
                         alt="Rishikarthik Velliangiri" 
                         className="w-full h-full object-cover"
                       />

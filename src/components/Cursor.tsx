@@ -106,8 +106,7 @@ const Cursor = () => {
   
   const glowSize = overSpline ? 20 + interactionStrength * 30 : 0;
   const cursorScale = overSpline ? 1.5 + interactionStrength * 0.5 : clicked ? 0.75 : linkHovered ? 1.5 : 1;
-  
-  return (
+    return (
     <>
       <div
         className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 transition-all duration-300 mix-blend-difference ${
@@ -116,12 +115,13 @@ const Cursor = () => {
         style={{
           transform: `translate(${position.x - 16}px, ${position.y - 16}px) scale(${cursorScale})`,
           border: overSpline 
-            ? `1px solid rgba(67, 97, 238, ${0.8 + interactionStrength * 0.2})`
+            ? `1px solid rgba(217, 70, 239, ${0.8 + interactionStrength * 0.2})`
             : '1px solid rgba(255, 255, 255, 0.8)',
           boxShadow: overSpline 
-            ? `0 0 ${glowSize}px rgba(67, 97, 238, 0.5), 0 0 ${glowSize * 2}px rgba(67, 97, 238, 0.3)` 
+            ? `0 0 ${glowSize}px rgba(217, 70, 239, 0.5), 0 0 ${glowSize * 2}px rgba(217, 70, 239, 0.3)` 
             : 'none',
-          transition: 'transform 0.2s ease-out, border 0.3s ease, box-shadow 0.3s ease'
+          transition: 'transform 0.2s ease-out, border 0.3s ease, box-shadow 0.3s ease',
+          mixBlendMode: 'normal'
         }}
       />
       <div
@@ -131,8 +131,9 @@ const Cursor = () => {
         style={{
           transform: `translate(${position.x - 4}px, ${position.y - 4}px)`,
           backgroundColor: overSpline 
-            ? `rgba(67, 97, 238, ${0.8 + interactionStrength * 0.2})` 
+            ? `rgba(217, 70, 239, ${0.8 + interactionStrength * 0.2})` 
             : 'white',
+          mixBlendMode: 'normal'
         }}
       />
     </>

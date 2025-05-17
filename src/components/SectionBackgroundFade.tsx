@@ -39,16 +39,15 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
       ref={ref}
       className={`absolute left-0 right-0 z-0 pointer-events-none overflow-hidden
         ${position === 'top' ? 'top-0' : 'bottom-0'}`}
-      style={{ height }}
-    >
-      {/* Base gradient fade */}
+      style={{ height }}    >      {/* Base gradient fade - using pure black */}
       <motion.div 
         className="absolute inset-0 w-full h-full"
         style={{
           background: position === 'top' 
-            ? `linear-gradient(to bottom, ${from}, ${to})`
-            : `linear-gradient(to top, ${from}, ${to})`,
-          opacity: backgroundOpacity
+            ? `linear-gradient(to bottom, rgba(0,0,0,0), ${to})`
+            : `linear-gradient(to top, rgba(0,0,0,0), ${to})`,
+          opacity: backgroundOpacity,
+          backdropFilter: "blur(0px)" /* Prevent any color blending */
         }}
       />
       

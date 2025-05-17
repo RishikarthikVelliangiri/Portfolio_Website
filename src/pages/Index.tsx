@@ -8,27 +8,54 @@ import ContactSection from '../components/ContactSection';
 import Cursor from '../components/Cursor';
 import { motion } from 'framer-motion';
 import AboutSection from '../components/AboutSection';
+// Import CSS directly to force black background
+import '../index.css';
 import SkillsSection from '../components/SkillsSection';
 import ExperienceSection from '../components/ExperienceSection';
 import EducationSection from '../components/EducationSection';
 import AwardsSection from '../components/AwardsSection';
-import SectionBackgroundFade from '../components/SectionBackgroundFade';
+import PersistentBackground3D from '../components/PersistentBackground3D';
+import AppleSectionWrapper from '../components/AppleSectionWrapper';
+// Remove SectionBackgroundFade to eliminate gray lines
 
 const Index = () => {
   const pageRef = React.useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    // Smooth scroll to section when clicking on anchor links
+    useEffect(() => {
+    // Enhanced Apple-style smooth scroll to section when clicking on anchor links
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLAnchorElement;
       if (target && target.hash && target.hash.startsWith('#')) {
         e.preventDefault();
         const element = document.querySelector(target.hash);
+        
         if (element) {
-          window.scrollTo({
-            top: element.getBoundingClientRect().top + window.pageYOffset - 80, // Offset for header
-            behavior: 'smooth'
-          });
+          // Get the target position
+          const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80; // Offset for header
+          
+          // Get current position
+          const startPosition = window.pageYOffset;
+          const distance = targetPosition - startPosition;
+          
+          // Apple-style smooth scrolling animation with cubic-bezier easing
+          const duration = 1200; // Longer for smoother effect
+          const startTime = performance.now();
+          
+          // Cubic bezier timing function - similar to Apple's smooth animations
+          const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+          
+          const animateScroll = (currentTime: number) => {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+            const easeProgress = easeOutCubic(progress);
+            
+            window.scrollTo(0, startPosition + distance * easeProgress);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateScroll);
+            }
+          };
+          
+          requestAnimationFrame(animateScroll);
         }
       }
     };
@@ -38,93 +65,56 @@ const Index = () => {
     return () => {
       document.removeEventListener('click', handleAnchorClick as EventListener);
     };
-  }, []);
-
-  return (
-    <motion.div 
-      ref={pageRef} 
-      className="min-h-screen bg-background text-foreground font-sans will-change-transform will-change-opacity"
+  }, []);return (    <motion.div ref={pageRef} 
+      className="min-h-screen bg-black text-foreground font-sans will-change-transform will-change-opacity"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      style={{ backgroundColor: "#000000" }} /* Force pure black */
     >
+      {/* Persistent 3D background that follows scroll */}
+      <PersistentBackground3D />
+      
       <Cursor />
       <Header />
-      <main className="relative overflow-hidden">
+      
+      {/* Main content without explicit z-index */}
+      <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
+        {/* Hero section doesn't need the wrapper as it has its own animations */}
         <HeroSection />
         
-        {/* Improved section transitions with smoother blending - removed blue hue */}
-        <SectionBackgroundFade
-          from="rgba(13,13,18,0)" 
-          to="rgba(13,13,18,0.95)"
-          position="bottom"
-          height={120}
-        />
+        {/* Apply Apple-style section wrappers with different scroll multipliers for varied effects */}
+        <AppleSectionWrapper id="about-section" scrollMultiplier={1.2} initialOffset={20}>
+          <AboutSection />
+        </AppleSectionWrapper>
         
-        <AboutSection />
+        <AppleSectionWrapper id="skills-section" scrollMultiplier={0.8} initialOffset={40}>
+          <SkillsSection />
+        </AppleSectionWrapper>
         
-        <SectionBackgroundFade
-          from="rgba(13,13,18,0.6)" 
-          to="rgba(12,10,29,0.9)"
-          position="top"
-          height={180}
-        />
+        <AppleSectionWrapper id="experience-section" scrollMultiplier={1.1} initialOffset={30}>
+          <ExperienceSection />
+        </AppleSectionWrapper>
         
-        <SkillsSection />
+        <AppleSectionWrapper id="projects-section" scrollMultiplier={0.9} initialOffset={25}>
+          <ProductsSection />
+        </AppleSectionWrapper>
         
-        <SectionBackgroundFade
-          from="rgba(12,10,29,0.7)" 
-          to="rgba(13,13,18,0.95)"
-          position="bottom"
-          height={180}
-        />
+        <AppleSectionWrapper id="education-section" scrollMultiplier={1.0} initialOffset={35}>
+          <EducationSection />
+        </AppleSectionWrapper>
         
-        <ExperienceSection />
+        <AppleSectionWrapper id="awards-section" scrollMultiplier={1.3} initialOffset={20}>
+          <AwardsSection />
+        </AppleSectionWrapper>
         
-        <SectionBackgroundFade
-          from="rgba(13,13,18,0.7)" 
-          to="rgba(16,16,28,0.95)"
-          position="bottom"
-          height={120}
-        />
+        <AppleSectionWrapper id="vision-section" scrollMultiplier={0.7} initialOffset={15}>
+          <VisionSection />
+        </AppleSectionWrapper>
         
-        <ProductsSection />
-        
-        <SectionBackgroundFade
-          from="rgba(16,16,28,0.7)" 
-          to="rgba(13,13,18,0.95)"
-          position="bottom"
-          height={120}
-        />
-        
-        <EducationSection />
-        
-        <SectionBackgroundFade
-          from="rgba(13,13,18,0.7)" 
-          to="rgba(12,10,29,0.95)"
-          position="bottom"
-          height={120}
-        />
-        
-        <AwardsSection />
-        
-        <SectionBackgroundFade
-          from="rgba(12,10,29,0.7)" 
-          to="rgba(9,9,18,0.95)"
-          position="bottom"
-          height={120}
-        />
-        
-        <VisionSection />
-        
-        <SectionBackgroundFade
-          from="rgba(9,9,18,0.7)" 
-          to="rgba(13,13,18,0.95)"
-          position="bottom"
-          height={120}
-        />
-        
-        <ContactSection />
+        <AppleSectionWrapper id="contact-section" scrollMultiplier={0.5} initialOffset={10}>
+          <ContactSection />
+        </AppleSectionWrapper>
       </main>
     </motion.div>
   );

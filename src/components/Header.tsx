@@ -80,10 +80,9 @@ const Header = () => {
             >
               {link.name}
             </a>
-          ))}
-          <a 
+          ))}          <a 
             href="#contact" 
-            className="px-5 py-2 rounded-md border border-blue-500/50 text-white hover:bg-blue-500/10 transition-all duration-300 text-sm font-medium"
+            className="px-5 py-2 rounded-md border border-purple-500/50 bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 text-white hover:bg-gradient-to-r hover:from-purple-600/30 hover:to-fuchsia-600/30 transition-all duration-300 text-sm font-medium"
           >
             Get in Touch
           </a>
@@ -111,10 +110,9 @@ const Header = () => {
               >
                 {link.name}
               </a>
-            ))}
-            <a 
+            ))}            <a 
               href="#contact" 
-              className="px-5 py-3 rounded-md border border-blue-500/50 text-white hover:bg-blue-500/10 transition-all duration-300 text-center"
+              className="px-5 py-3 rounded-md border border-purple-500/50 bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 text-white hover:bg-gradient-to-r hover:from-purple-600/30 hover:to-fuchsia-600/30 transition-all duration-300 text-center"
               onClick={() => setMobileMenuOpen(false)}
             >
               Get in Touch

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import ProductCard, { Product } from './ProductCard';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Code, Gamepad2, FileText } from 'lucide-react';
 
 // Real projects data
@@ -64,11 +64,15 @@ const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))
 
 const ProductsSection = () => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [displayedProjects, setDisplayedProjects] = useState(projects);
   
-  // Fix the filtering logic to properly handle the "All" category
-  const filteredProducts = activeCategory === 'All' 
-    ? projects 
-    : projects.filter(product => product.category === activeCategory);
+  // Update the filtering logic to use state for displayed projects
+  React.useEffect(() => {
+    const filtered = activeCategory === 'All' 
+      ? projects 
+      : projects.filter(product => product.category === activeCategory);
+    setDisplayedProjects(filtered);
+  }, [activeCategory]);
     
   // Animation variants
   const containerVariants = {
@@ -157,24 +161,40 @@ const ProductsSection = () => {
               {category}
             </button>
           ))}
-        </motion.div>
-        
-        {/* Projects grid - Ensure visibility of filtered products */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {filteredProducts.map((product, index) => (
-            <motion.div 
-              key={product.id}
-              variants={itemVariants}
-              className="h-full"
-              whileHover={{ 
-                y: -10,
-                transition: { type: "spring", stiffness: 300 }
-              }}
-            >
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
-        </div>
+        </motion.div>        {/* Projects grid - With AnimatePresence outside the grid */}
+        <AnimatePresence mode="wait">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+            key={activeCategory} // This key makes the grid re-render when category changes
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {displayedProjects.map((product, index) => (
+              <motion.div 
+                key={product.id}
+                variants={itemVariants}
+                className="h-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ 
+                  opacity: 1, 
+                  y: 0, 
+                  transition: { 
+                    delay: index * 0.1,
+                    duration: 0.3
+                  }
+                }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
         
         {/* Featured Project */}
         <motion.div 
