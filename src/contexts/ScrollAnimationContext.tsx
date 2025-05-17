@@ -28,82 +28,52 @@ export const ScrollAnimationProvider: React.FC<{ children: ReactNode }> = ({ chi
   const [viewportHeight, setViewportHeight] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ticking = useRef(false);
   
   useEffect(() => {
-    // Improved scroll handling with requestAnimationFrame for better performance
+    // Simplified scroll handling to prevent performance issues
     const handleScroll = () => {
-      // Use requestAnimationFrame to avoid excessive calculations
-      if (!ticking.current) {
-        requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-          
-          // Update real scroll position directly
-          scrollY.set(currentScrollY);
-          
-          // Only update direction when there's a significant change to prevent jitter
-          if (Math.abs(currentScrollY - previousScrollY) > 3) {
-            setScrollDirection(currentScrollY > previousScrollY ? 'down' : 'up');
-            setPreviousScrollY(currentScrollY);
-          }
-          
-          // Calculate scroll progress (0 to 1) with more stable height calculations
-          const docHeight = Math.max(
-            document.body.scrollHeight, 
-            document.body.offsetHeight, 
-            document.documentElement.clientHeight, 
-            document.documentElement.scrollHeight, 
-            document.documentElement.offsetHeight
-          );
-          
-          const windowHeight = window.innerHeight;
-          const scrollableDistance = docHeight - windowHeight;
-          
-          // Prevent division by zero and ensure progress is between 0-1
-          const currentProgress = scrollableDistance > 0 
-            ? Math.max(0, Math.min(1, currentScrollY / scrollableDistance)) 
-            : 0;
-          
-          // Update the progress MotionValue with a slight damping effect
-          // to prevent jumps caused by dynamic content height changes
-          const currentVal = scrollProgress.get();
-          scrollProgress.set(currentVal + (currentProgress - currentVal) * 0.5);
-          
-          // Handle isScrolling state
-          setIsScrolling(true);
-          if (scrollTimeout.current) {
-            clearTimeout(scrollTimeout.current);
-          }
-          
-          scrollTimeout.current = setTimeout(() => {
-            setIsScrolling(false);
-          }, 150); // Slightly shorter timeout
-          
-          ticking.current = false;
-        });
-        
-        ticking.current = true;
+      const currentScrollY = window.scrollY;
+      
+      // Update real scroll position
+      scrollY.set(currentScrollY);
+      
+      // Only update direction with significant change
+      if (Math.abs(currentScrollY - previousScrollY) > 5) {
+        setScrollDirection(currentScrollY > previousScrollY ? 'down' : 'up');
+        setPreviousScrollY(currentScrollY);
       }
-    };
-    
-    const handleResize = () => {
-      // Debounce resize events
+      
+      // Simpler progress calculation
+      const docHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const scrollableDistance = docHeight - windowHeight;
+      
+      if (scrollableDistance > 0) {
+        const progress = Math.max(0, Math.min(1, currentScrollY / scrollableDistance));
+        scrollProgress.set(progress);
+      }
+      
+      // Simple scrolling state
+      setIsScrolling(true);
+      
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
       
       scrollTimeout.current = setTimeout(() => {
-        setViewportHeight(window.innerHeight);
-        // Re-calculate scroll position after resize
-        handleScroll();
-      }, 100);
+        setIsScrolling(false);
+      }, 150);
+    };
+    
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+      handleScroll();
     };
     
     // Initial setup
     handleResize();
-    handleScroll();
     
-    // Use passive event listener for better performance
+    // Use passive event listeners for better performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
     
