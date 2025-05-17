@@ -21,18 +21,23 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
     offset: position === 'top' ? ["start end", "end start"] : ["end end", "start start"]
   });
   
-  // Create a gradient based on scroll position with smoother easing
+  // Create a simpler gradient based on scroll position with only essential points
+  // Reduced complexity to improve performance
   const backgroundOpacity = useTransform(
     scrollYProgress,
-    [0, 0.5, 1],  // Input range
-    [0, 0.7, 1],  // Output range with smoother fade
+    [0, 1],  // Simplified input range
+    [0, 1],  // Linear output range for better performance
   );
   
   return (
     <motion.div 
       className={`absolute left-0 right-0 z-0 pointer-events-none overflow-hidden
         ${position === 'top' ? 'top-0' : 'bottom-0'}`}
-      style={{ height }}
+      style={{ 
+        height,
+        willChange: 'opacity', // Performance hint
+        backfaceVisibility: 'hidden' // Additional performance optimization
+      }}
     >      
       <motion.div 
         className="absolute inset-0 w-full h-full"

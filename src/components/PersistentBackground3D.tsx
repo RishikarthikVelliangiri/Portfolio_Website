@@ -356,7 +356,9 @@ const PersistentBackground3D = () => {
       const radialSegments = 16;
       const tubularSegments = 100;
       
-      const ringGeometry = new THREE.TorusGeometry(radius, tubeWidth, radialSegments, tubularSegments);      const colors = [0xD946EF, 0xAB45C6, 0xff69b4, 0xE323C0, 0xD946EF];      // Create a super bright material for maximum visibility
+      const ringGeometry = new THREE.TorusGeometry(radius, tubeWidth, radialSegments, tubularSegments);      
+      const colors = [0xD946EF, 0xAB45C6, 0xff69b4, 0xE323C0, 0xD946EF];      
+      // Create a super bright material for maximum visibility
       const ringMaterial = new THREE.MeshBasicMaterial({
         color: colors[i],
         transparent: false,
@@ -371,8 +373,10 @@ const PersistentBackground3D = () => {
       scene.add(ring);
       rings.push(ring);
     }
-    objectsRef.current.rings = rings;    // Central core
-    const coreGeometry = new THREE.IcosahedronGeometry(1.5, 4);    const coreMaterial = new THREE.MeshBasicMaterial({
+    objectsRef.current.rings = rings;    
+    // Central core
+    const coreGeometry = new THREE.IcosahedronGeometry(1.5, 4);    
+    const coreMaterial = new THREE.MeshBasicMaterial({
       color: 0xFFFFFF, // Bright white for high contrast
       wireframe: true,
       side: THREE.DoubleSide,
@@ -401,7 +405,8 @@ const PersistentBackground3D = () => {
       dataPointsPositions[i * 3 + 2] = radius * Math.cos(phi);
     }
     
-    dataPointsGeometry.setAttribute('position', new THREE.BufferAttribute(dataPointsPositions, 3));    const dataPointsMaterial = new THREE.PointsMaterial({
+    dataPointsGeometry.setAttribute('position', new THREE.BufferAttribute(dataPointsPositions, 3));    
+    const dataPointsMaterial = new THREE.PointsMaterial({
       size: 0.7, // Much larger size for guaranteed visibility
       color: 0xFFFFFF,
       transparent: true,
@@ -463,7 +468,8 @@ const PersistentBackground3D = () => {
       if (objectsRef.current.core) {
         objectsRef.current.core.geometry.dispose();
         (objectsRef.current.core.material as THREE.Material).dispose();
-      }      if (objectsRef.current.dataPoints) {
+      }      
+      if (objectsRef.current.dataPoints) {
         objectsRef.current.dataPoints.geometry.dispose();
         (objectsRef.current.dataPoints.material as THREE.Material).dispose();
       }
@@ -514,7 +520,9 @@ const PersistentBackground3D = () => {
     };
     
     document.addEventListener('mousemove', onDocumentMouseMove);
-    window.addEventListener('scroll', onScroll);    const animate = (timestamp: number) => {
+    window.addEventListener('scroll', onScroll);    
+    
+    const animate = (timestamp: number) => {
       try {
         // Check for user inactivity
         if (Date.now() - lastMoveTime > activityTimeout) {
@@ -534,7 +542,7 @@ const PersistentBackground3D = () => {
         // Update last render time
         lastRenderTimeRef.current = timestamp;
         
-    // Get current scroll progress
+        // Get current scroll progress
         const currentProgress = scrollProgress.get();
         
         // Log for debugging
@@ -550,89 +558,96 @@ const PersistentBackground3D = () => {
         // Adjusted for more responsive yet still smooth movement
         camera.position.x += (cameraPosition.x - camera.position.x) * 0.05;
         camera.position.y += (cameraPosition.y - camera.position.y) * 0.05;
-        camera.position.z += (cameraPosition.z - camera.position.z) * 0.05;        // Apply scene rotation with smooth Apple-like transition
+        camera.position.z += (cameraPosition.z - camera.position.z) * 0.05;        
+        
+        // Apply scene rotation with smooth Apple-like transition
         scene.rotation.x += (sceneRotation.x - scene.rotation.x) * 0.03;
         scene.rotation.y += (sceneRotation.y - scene.rotation.y) * 0.03;
         
-        // Add subtle mouse influence - more refined for Apple-like precision
-        targetX = mouseX * 0.15; // Reduced for subtlety
-        targetY = mouseY * 0.15;
+        // Add more substantial mouse influence for cursor responsiveness
+        targetX = mouseX * 0.3; // Increased for better responsiveness
+        targetY = mouseY * 0.3;
         
-        // Apply mouse movement with extra damping for smoother feel
-        const mouseDamping = 0.008;
-        scene.rotation.y += (targetX * 0.02 - scene.rotation.y) * mouseDamping;
-        scene.rotation.x += (-targetY * 0.02 - scene.rotation.x) * mouseDamping;
+        // Apply mouse movement with extra damping for smoother feel but more responsiveness
+        const mouseDamping = 0.02; // Increased for more responsive movement
+        scene.rotation.y += (targetX * 0.05 - scene.rotation.y) * mouseDamping;
+        scene.rotation.x += (-targetY * 0.05 - scene.rotation.x) * mouseDamping;
+        
         // Apply visibility and opacity based on scroll position
-      if (objects.core) {
-        // Always keep core visible
-        objects.core.visible = true;
-        
-        // Apply enhanced visibility
-        if (objects.core.material instanceof THREE.Material && 'opacity' in objects.core.material) {
-          // Ensure core is always highly visible
-          objects.core.material.opacity = 1.0;
+        if (objects.core) {
+          // Always keep core visible
+          objects.core.visible = true;
           
-          // Make the wireframe more visible if possible
-          if ('wireframe' in objects.core.material) {
-            objects.core.material.wireframe = true;
-          }
-        }
-        
-        // Animate core with subtle movement
-        objects.core.rotation.x += 0.003; // Slowed down slightly
-        objects.core.rotation.y += 0.005;
-        
-        // Smoother pulsing effect - more Apple-like subtlety
-        const corePulse = Math.sin(Date.now() * 0.0005) * 0.08 + 1; // Slower, subtler
-        objects.core.scale.x = objects.core.scale.y = objects.core.scale.z = corePulse;
-      }
-        if (objects.dataPoints) {
-        // Always make data points visible for better user experience
-        objects.dataPoints.visible = true;
-        
-        // Apply opacity for smooth transitions but keep minimum visibility
-        if (objects.dataPoints.material instanceof THREE.PointsMaterial) {
-          // Ensure minimum opacity of 0.7 to maintain visibility
-          objects.dataPoints.material.opacity = elementsVisibility.dataPoints ? 
-            Math.min(1.0, Math.max(0.7, elementsOpacity.dataPoints * 1.0)) : 0.7;
+          // Apply enhanced visibility
+          if (objects.core.material instanceof THREE.Material && 'opacity' in objects.core.material) {
+            // Ensure core is always highly visible
+            objects.core.material.opacity = 1.0;
             
-          // Create more pronounced pulsating effect
-          objects.dataPoints.material.size = 0.6 + Math.sin(Date.now() * 0.0005) * 0.2;
-        }
-        
-        // Animate data points with smoother rotation
-        objects.dataPoints.rotation.x += 0.0002;
-        objects.dataPoints.rotation.y += 0.0003;
-      }
-        // Animate rings with smoother transitions
-      objects.rings.forEach((ring, i) => {
-        // Always keep rings visible
-        ring.visible = true;
-        
-        // Apply opacity for smooth transitions but maintain minimum visibility
-        if (ring.material instanceof THREE.Material && 'opacity' in ring.material) {
-          // Ensure rings are always at least somewhat visible
-          ring.material.opacity = elementsVisibility.rings ? 
-            1.0 : 0.5; // Fixed opacity values for better visibility
-          
-          // Boost emissive properties if available
-          if ('emissive' in ring.material && ring.material.emissive) {
-            const colors = [0xD946EF, 0xAB45C6, 0xff69b4, 0xE323C0, 0xD946EF];
-            ring.material.emissive.setHex(colors[i % colors.length]);
+            // Make the wireframe more visible if possible
+            if ('wireframe' in objects.core.material) {
+              objects.core.material.wireframe = true;
+            }
           }
+          
+          // Animate core with subtle movement
+          objects.core.rotation.x += 0.003; // Slowed down slightly
+          objects.core.rotation.y += 0.005;
+          
+          // Smoother pulsing effect - more Apple-like subtlety
+          const corePulse = Math.sin(Date.now() * 0.0005) * 0.08 + 1; // Slower, subtler
+          objects.core.scale.x = objects.core.scale.y = objects.core.scale.z = corePulse;
         }
         
-        // Slower, more elegant rotation
-        ring.rotation.z += 0.0007 * (i + 1);
+        if (objects.dataPoints) {
+          // Always make data points visible for better user experience
+          objects.dataPoints.visible = true;
+          
+          // Apply opacity for smooth transitions but keep minimum visibility
+          if (objects.dataPoints.material instanceof THREE.PointsMaterial) {
+            // Ensure minimum opacity of 0.7 to maintain visibility
+            objects.dataPoints.material.opacity = elementsVisibility.dataPoints ? 
+              Math.min(1.0, Math.max(0.7, elementsOpacity.dataPoints * 1.0)) : 0.7;
+              
+            // Create more pronounced pulsating effect
+            objects.dataPoints.material.size = 0.6 + Math.sin(Date.now() * 0.0005) * 0.2;
+          }
+          
+          // Animate data points with smoother rotation
+          objects.dataPoints.rotation.x += 0.0002;
+          objects.dataPoints.rotation.y += 0.0003;
+        }
         
-        // Add subtle pulsating effect - more Apple-like refinement
-        const time = Date.now() * 0.0006; // Slower for subtlety
-        const offset = i * 0.3; // Greater phase offset between rings
-        const scalePulse = Math.sin(time + offset) * 0.04 + 1; // Subtler effect
-        ring.scale.set(scalePulse, scalePulse, 1);
-      });
+        // Animate rings with smoother transitions
+        objects.rings.forEach((ring, i) => {
+          // Always keep rings visible
+          ring.visible = true;
+          
+          // Apply opacity for smooth transitions but maintain minimum visibility
+          if (ring.material instanceof THREE.Material && 'opacity' in ring.material) {
+            // Ensure rings are always at least somewhat visible
+            ring.material.opacity = elementsVisibility.rings ? 
+              1.0 : 0.5; // Fixed opacity values for better visibility
+            
+            // Fix the TypeScript error by properly checking the material type
+            // Only apply emissive properties to materials that support it
+            if ('emissive' in ring.material && ring.material.emissive instanceof THREE.Color) {
+              const colors = [0xD946EF, 0xAB45C6, 0xff69b4, 0xE323C0, 0xD946EF];
+              ring.material.emissive.set(new THREE.Color(colors[i % colors.length]));
+            }
+          }
+          
+          // Slower, more elegant rotation
+          ring.rotation.z += 0.0007 * (i + 1);
+          
+          // Add subtle pulsating effect - more Apple-like refinement
+          const time = Date.now() * 0.0006; // Slower for subtlety
+          const offset = i * 0.3; // Greater phase offset between rings
+          const scalePulse = Math.sin(time + offset) * 0.04 + 1; // Subtler effect
+          ring.scale.set(scalePulse, scalePulse, 1);
+        });
+        
         renderer.render(scene, camera);
-      animationFrameRef.current = requestAnimationFrame(animate);
+        animationFrameRef.current = requestAnimationFrame(animate);
       } catch (error) {
         console.error("Error in animation loop:", error);
         // Continue animation despite errors
@@ -642,14 +657,17 @@ const PersistentBackground3D = () => {
     
     // Start animation loop with requestAnimationFrame
     requestAnimationFrame(animate);
-      return () => {
+    
+    return () => {
       document.removeEventListener('mousemove', onDocumentMouseMove);
       window.removeEventListener('scroll', onScroll);
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [scrollProgress]);  // Component to render with original positioning
+  }, [scrollProgress]);  
+  
+  // Component to render with original positioning
   return (
     <div 
       ref={canvasRef} 
