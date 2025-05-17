@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ProductsSection from '../components/ProductsSection';
@@ -18,98 +17,51 @@ import AppleSectionWrapper from '../components/AppleSectionWrapper';
 const Index = () => {
   const pageRef = React.useRef<HTMLDivElement>(null);
   
-  useEffect(() => {
-    // Enhanced Apple-style smooth scroll to section when clicking on anchor links
-    const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLAnchorElement;
-      if (target && target.hash && target.hash.startsWith('#')) {
-        e.preventDefault();
-        const element = document.querySelector(target.hash);
-        
-        if (element) {
-          // Get the target position
-          const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - 80; // Offset for header
-          
-          // Get current position
-          const startPosition = window.pageYOffset;
-          const distance = targetPosition - startPosition;
-          
-          // Apple-style smooth scrolling animation with cubic-bezier easing
-          const duration = 1200; // Longer for smoother effect
-          const startTime = performance.now();
-          
-          // Cubic bezier timing function - similar to Apple's smooth animations
-          const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-          
-          const animateScroll = (currentTime: number) => {
-            const elapsedTime = currentTime - startTime;
-            const progress = Math.min(elapsedTime / duration, 1);
-            const easeProgress = easeOutCubic(progress);
-            
-            window.scrollTo(0, startPosition + distance * easeProgress);
-            
-            if (progress < 1) {
-              requestAnimationFrame(animateScroll);
-            }
-          };
-          
-          requestAnimationFrame(animateScroll);
-        }
-      }
-    };
-    
-    document.addEventListener('click', handleAnchorClick as EventListener);
-    
-    return () => {
-      document.removeEventListener('click', handleAnchorClick as EventListener);
-    };
-  }, []);
+  // Simplified - removed complex scroll animation
   
   return (
     <motion.div ref={pageRef} 
-      className="min-h-screen bg-black text-foreground font-sans will-change-transform will-change-opacity"
+      className="min-h-screen bg-black text-foreground font-sans"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       style={{ backgroundColor: "#000000" }}
     >
-      {/* 3D background removed */}
-      
       <Cursor />
       <Header />
       
       <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
         <HeroSection />
         
-        <AppleSectionWrapper id="about-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="about-section">
           <AboutSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="skills-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="skills-section">
           <SkillsSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="experience-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="experience-section">
           <ExperienceSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="projects-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="projects-section">
           <ProductsSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="education-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="education-section">
           <EducationSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="awards-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="awards-section">
           <AwardsSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="vision-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="vision-section">
           <VisionSection />
         </AppleSectionWrapper>
         
-        <AppleSectionWrapper id="contact-section" scrollMultiplier={1.0} initialOffset={0}>
+        <AppleSectionWrapper id="contact-section">
           <ContactSection />
         </AppleSectionWrapper>
       </main>

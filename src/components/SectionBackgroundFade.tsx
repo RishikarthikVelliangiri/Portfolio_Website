@@ -10,7 +10,6 @@ interface SectionBackgroundFadeProps {
 }
 
 const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({ 
-  from, 
   to, 
   position, 
   height = 200,
