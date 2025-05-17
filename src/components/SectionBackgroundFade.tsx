@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface SectionBackgroundFadeProps {
@@ -17,29 +17,23 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
   height = 200,
   children 
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
-    target: ref,
     offset: position === 'top' ? ["start end", "end start"] : ["end end", "start start"]
   });
   
-  // Create a gradient based on scroll position with better easing
+  // Create a gradient based on scroll position with smoother easing
   const backgroundOpacity = useTransform(
     scrollYProgress,
     [0, 0.5, 1],  // Input range
-    [0, 0.7, 1],  // Output range with higher mid-point for smoother fade
+    [0, 0.7, 1],  // Output range with smoother fade
   );
-  
-  // Create particle effects
-  const particleCount = 20;
-  const particles = Array.from({ length: particleCount });
   
   return (
     <motion.div 
-      ref={ref}
       className={`absolute left-0 right-0 z-0 pointer-events-none overflow-hidden
         ${position === 'top' ? 'top-0' : 'bottom-0'}`}
-      style={{ height }}    >      {/* Base gradient fade - using pure black */}
+      style={{ height }}
+    >      
       <motion.div 
         className="absolute inset-0 w-full h-full"
         style={{
@@ -47,55 +41,8 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
             ? `linear-gradient(to bottom, rgba(0,0,0,0), ${to})`
             : `linear-gradient(to top, rgba(0,0,0,0), ${to})`,
           opacity: backgroundOpacity,
-          backdropFilter: "blur(0px)" /* Prevent any color blending */
         }}
       />
-      
-      {/* Particles - neutral colors */}
-      {particles.map((_, index) => (
-        <motion.div
-          key={index}
-          className="absolute w-1 h-1 rounded-full bg-white/20 blur-[1px]"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            opacity: [0, 0.5, 0],
-            scale: [0, 1, 0],
-            y: position === 'top' ? [0, 20] : [0, -20],
-          }}
-          transition={{
-            duration: 2 + Math.random() * 3,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-      
-      {/* Energy wisps - neutral colors */}
-      {[1, 2, 3].map((i) => (
-        <motion.div
-          key={`wisp-${i}`}
-          className="absolute h-20 left-0 w-full opacity-10"
-          style={{
-            top: position === 'top' ? '50%' : undefined,
-            bottom: position === 'bottom' ? '50%' : undefined,
-            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)'
-          }}
-          animate={{
-            x: ['-100%', '100%'],
-            width: ['10%', '50%', '10%']
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            delay: i * 2,
-            ease: "easeInOut"
-          }}
-        />
-      ))}
       
       {children}
     </motion.div>
