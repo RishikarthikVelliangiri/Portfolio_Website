@@ -10,6 +10,7 @@ interface SectionBackgroundFadeProps {
 }
 
 const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({ 
+  from,
   to, 
   position, 
   height = 200,
@@ -25,8 +26,8 @@ const SectionBackgroundFade: React.FC<SectionBackgroundFadeProps> = ({
         className="absolute inset-0 w-full h-full"
         style={{
           background: position === 'top' 
-            ? `linear-gradient(to bottom, rgba(0,0,0,0), ${to})`
-            : `linear-gradient(to top, rgba(0,0,0,0), ${to})`,
+            ? `linear-gradient(to bottom, ${from || 'rgba(0,0,0,0)'}, ${to})`
+            : `linear-gradient(to top, ${from || 'rgba(0,0,0,0)'}, ${to})`,
         }}
       />
       

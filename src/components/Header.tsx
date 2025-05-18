@@ -39,7 +39,7 @@ const Header = () => {
       }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -80,7 +80,8 @@ const Header = () => {
             >
               {link.name}
             </a>
-          ))}          <a 
+          ))}
+          <a 
             href="#contact" 
             className="px-5 py-2 rounded-md border border-purple-500/50 bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 text-white hover:bg-gradient-to-r hover:from-purple-600/30 hover:to-fuchsia-600/30 transition-all duration-300 text-sm font-medium"
           >
@@ -92,6 +93,7 @@ const Header = () => {
         <button 
           className="md:hidden text-white"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -110,7 +112,8 @@ const Header = () => {
               >
                 {link.name}
               </a>
-            ))}            <a 
+            ))}
+            <a 
               href="#contact" 
               className="px-5 py-3 rounded-md border border-purple-500/50 bg-gradient-to-r from-purple-600/20 to-fuchsia-600/20 text-white hover:bg-gradient-to-r hover:from-purple-600/30 hover:to-fuchsia-600/30 transition-all duration-300 text-center"
               onClick={() => setMobileMenuOpen(false)}

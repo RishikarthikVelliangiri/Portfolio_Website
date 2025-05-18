@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
@@ -13,6 +14,7 @@ import ExperienceSection from '../components/ExperienceSection';
 import EducationSection from '../components/EducationSection';
 import AwardsSection from '../components/AwardsSection';
 import AppleSectionWrapper from '../components/AppleSectionWrapper';
+import PersistentBackground3D from '../components/PersistentBackground3D';
 
 const Index = () => {
   const pageRef = React.useRef<HTMLDivElement>(null);
@@ -28,6 +30,7 @@ const Index = () => {
       style={{ backgroundColor: "#000000" }}
     >
       <Cursor />
+      <PersistentBackground3D />
       <Header />
       
       <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
