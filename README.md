@@ -71,3 +71,46 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+# Portfolio Website: Aura Display Evolve
+
+This repository contains the source code for a modern, interactive portfolio website designed to showcase projects, skills, and experience with a focus on sophisticated design and smooth user experience.
+
+## Key Design & Technical Features:
+
+- **Immersive 3D Backgrounds**: Utilizes Three.js for dynamic and engaging 3D background animations, providing a visually rich experience.
+- **Advanced Animations & Transitions**:
+  - Leverages Framer Motion for fluid page transitions, component animations, and micro-interactions.
+  - Features Apple-inspired smooth spring animations for text and UI elements.
+  - Scroll-triggered animations for sections and elements, enhancing storytelling as the user navigates.
+- **Parallax Effects**: Subtle parallax scrolling effects on elements like the hero section text to create a sense of depth and engagement.
+- **Responsive Design**:
+  - Built with Tailwind CSS, ensuring full responsiveness across desktops, tablets, and mobile devices.
+  - Includes custom hooks like `use-mobile` for adapting behavior based on screen size.
+- **Modern UI Components**:
+  - Integrates a comprehensive suite of `shadcn/ui` components, providing a consistent, accessible, and aesthetically pleasing user interface.
+  - Custom-styled components to match the overall design language.
+- **Interactive Custom Cursor**: A custom cursor enhances the user interaction and adds a unique touch to the browsing experience.
+- **Thematic Sections**: Clearly defined sections for Hero, About, Skills, Experience, Education, Awards, Products/Projects, Vision, and Contact, each with tailored animations and layouts.
+- **Visually Appealing Typography & Gradients**:
+  - Use of display fonts and careful typographic hierarchy.
+  - Gradient text effects and subtle gradient overlays to enhance readability and visual appeal.
+- **Optimized Performance**:
+  - Techniques like `requestAnimationFrame` for smooth scroll-based animations.
+  - Lazy loading and code splitting (inherent with Vite) for faster initial load times.
+- **Clean Codebase**:
+  - Built with React, TypeScript, and Vite for a modern development workflow.
+  - Organized project structure with clear separation of components, hooks, contexts, and pages.
+- **Accessibility Considerations**: While continuously improving, the use of semantic HTML, ARIA attributes (often provided by `shadcn/ui`), and keyboard navigation considerations are part of the design philosophy.
+
+## Technology Stack:
+
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion, Three.js (for 3D aspects)
+- **UI Components**: shadcn/ui
+- **Linting/Formatting**: ESLint, Prettier (implied by standard setups)
+- **Deployment**: Configured for Vercel (as per `vercel.json`)
+
+This portfolio aims to deliver a memorable and professional presentation through cutting-edge web technologies and a keen eye for design detail.
