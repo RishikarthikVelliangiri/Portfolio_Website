@@ -8,4 +8,7 @@ import './index.css';
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");
 
-createRoot(rootElement).render(<App />);
+const root = createRoot(rootElement);
+
+// Explicitly render without StrictMode at the top level
+root.render(<App />);

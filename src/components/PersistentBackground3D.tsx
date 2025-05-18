@@ -13,9 +13,14 @@ const PersistentBackground3D = () => {
   
   const { scrollY } = useScrollAnimation();
 
+  console.log("PersistentBackground3D component mounting");
+  
   // Initialize Three.js scene
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+      console.log("Container ref is null, cannot initialize Three.js");
+      return;
+    }
     
     console.log("Initializing Three.js scene");
     
@@ -25,12 +30,12 @@ const PersistentBackground3D = () => {
     
     // Create camera with wider field of view
     const camera = new THREE.PerspectiveCamera(
-      90, // Wider field of view (was 75)
+      90, // Wider field of view
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 5; // Keep camera closer to see more particles
+    camera.position.z = 5;
     cameraRef.current = camera;
     
     // Create renderer with better quality settings
@@ -43,36 +48,37 @@ const PersistentBackground3D = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
-    // Make renderer canvas take full width/height
-    renderer.domElement.style.width = '100%';
-    renderer.domElement.style.height = '100%';
+    // Make renderer canvas take full width/height and ensure it's visible
+    renderer.domElement.style.width = '100vw';
+    renderer.domElement.style.height = '100vh';
     renderer.domElement.style.position = 'fixed';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
-    renderer.domElement.style.zIndex = '-1';
+    renderer.domElement.style.zIndex = '-1'; // Behind other content
+    renderer.domElement.style.pointerEvents = 'none'; // Don't capture clicks
     
     containerRef.current.innerHTML = ''; // Clear any previous canvas
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
     
-    // Create more particles with larger size for better visibility
+    // Create particles with extremely visible settings
     const particleGeometry = new THREE.BufferGeometry();
-    const particleCount = 5000; // Increased from 2500
+    const particleCount = 8000; // Much more particles
     
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
     
-    // Brighter colors for better visibility
+    // Very bright colors for maximum visibility
     const colorPalette = [
-      new THREE.Color(0xb366ff), // Bright purple
-      new THREE.Color(0xff66ff), // Bright pink
-      new THREE.Color(0xc384fc), // Bright lavender
-      new THREE.Color(0xd946ef), // Bright fuchsia
+      new THREE.Color(0xb366ff).multiplyScalar(2), // Bright purple
+      new THREE.Color(0xff66ff).multiplyScalar(2), // Bright pink
+      new THREE.Color(0xc384fc).multiplyScalar(2), // Bright lavender
+      new THREE.Color(0xd946ef).multiplyScalar(2), // Bright fuchsia
     ];
     
     for (let i = 0; i < particleCount * 3; i += 3) {
       // Position particles in a sphere with wider distribution
-      const radius = 3 + Math.random() * 15; // Bigger radius for more visible distribution
+      const radius = 3 + Math.random() * 20; // Even bigger radius
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       
@@ -90,9 +96,9 @@ const PersistentBackground3D = () => {
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     
-    // Use larger particle size and higher opacity
+    // Use much larger particle size and full opacity
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.25, // Increased from 0.1
+      size: 0.4, // Even larger size
       vertexColors: true,
       transparent: true,
       opacity: 1.0, // Full opacity
@@ -110,6 +116,8 @@ const PersistentBackground3D = () => {
       cameraRef.current.aspect = window.innerWidth / window.innerHeight;
       cameraRef.current.updateProjectionMatrix();
       rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      
+      console.log("Resized Three.js renderer to:", window.innerWidth, window.innerHeight);
     };
     
     // Handle mouse movement with more responsive effect
@@ -123,18 +131,18 @@ const PersistentBackground3D = () => {
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
     
-    // Animation loop with more dramatic movement
+    // Animation loop with dramatic movement
     const animate = () => {
       if (!particlesRef.current || !sceneRef.current || !cameraRef.current || !rendererRef.current) return;
       
       const time = Date.now() * 0.0005;
       
       // More responsive rotation
-      particlesRef.current.rotation.x = time * 0.3 + mouseRef.current.y * 0.1;
-      particlesRef.current.rotation.y = time * 0.2 + mouseRef.current.x * 0.1;
+      particlesRef.current.rotation.x = time * 0.3 + mouseRef.current.y * 0.2;
+      particlesRef.current.rotation.y = time * 0.2 + mouseRef.current.x * 0.2;
       
-      // Subtle pulsing effect
-      const pulseFactor = Math.sin(time * 2) * 0.05 + 1;
+      // Stronger pulsing effect
+      const pulseFactor = Math.sin(time * 3) * 0.1 + 1;
       particlesRef.current.scale.set(pulseFactor, pulseFactor, pulseFactor);
       
       // Render scene
@@ -146,11 +154,17 @@ const PersistentBackground3D = () => {
     
     animate();
     
-    // Debug log to confirm rendering
     console.log("Three.js animation started");
+    
+    // Run an immediate render to ensure the scene appears
+    if (rendererRef.current && sceneRef.current && cameraRef.current) {
+      rendererRef.current.render(sceneRef.current, cameraRef.current);
+      console.log("Initial render completed");
+    }
     
     // Cleanup function
     return () => {
+      console.log("Cleaning up Three.js resources");
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       
@@ -176,38 +190,37 @@ const PersistentBackground3D = () => {
       rendererRef.current = null;
       particlesRef.current = null;
     };
-  }, []);
+  }, []); // Empty dependency array to run once on mount
   
   // Effect to handle scroll-based animations
   useEffect(() => {
-    if (!particlesRef.current) return;
-    
     const updateScroll = () => {
       const scrollValue = window.scrollY;
       if (particlesRef.current) {
         // More dramatic parallax effect based on scroll position
-        particlesRef.current.position.y = -scrollValue * 0.002;
+        particlesRef.current.position.y = -scrollValue * 0.003;
+        console.log("Updated particle position based on scroll:", scrollValue);
       }
     };
     
-    // Use the modern approach for onChange
-    const unsubscribe = scrollY.on("change", updateScroll);
+    // Update immediately to set initial position
+    updateScroll();
     
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    // Use the modern approach for onChange if available
+    return scrollY ? scrollY.on("change", updateScroll) : undefined;
   }, [scrollY]);
 
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 pointer-events-none z-[-1]"
+      className="fixed inset-0 w-screen h-screen pointer-events-none z-[-1]"
       style={{ 
-        width: '100%', 
+        width: '100vw', 
         height: '100vh',
         backgroundColor: 'transparent'
       }}
       aria-hidden="true"
+      id="three-js-container"
     />
   );
 };
