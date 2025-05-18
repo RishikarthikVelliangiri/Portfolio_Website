@@ -132,9 +132,8 @@ const AboutSection = () => {
                   <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-full max-w-[240px]">
                     {/* Animated holographic border */}
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-gradient-shift"></div>
-                    
-                    <div className="absolute inset-[2px] overflow-hidden rounded-lg bg-black">                      <img 
-                        src="/public/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
+                      <div className="absolute inset-[2px] overflow-hidden rounded-lg bg-black">                      <img 
+                        src="/lovable-uploads/bceda71f-9a59-48a9-ac6a-f46d79204936.png" 
                         alt="Rishikarthik Velliangiri" 
                         className="w-full h-full object-cover"
                       />
