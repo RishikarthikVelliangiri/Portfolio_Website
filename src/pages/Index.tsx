@@ -1,5 +1,4 @@
-
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ProductsSection from '../components/ProductsSection';
@@ -14,41 +13,24 @@ import ExperienceSection from '../components/ExperienceSection';
 import EducationSection from '../components/EducationSection';
 import AwardsSection from '../components/AwardsSection';
 import AppleSectionWrapper from '../components/AppleSectionWrapper';
-import PersistentBackground3D from '../components/PersistentBackground3D';
 
 const Index = () => {
-  const pageRef = useRef<HTMLDivElement>(null);
+  const pageRef = React.useRef<HTMLDivElement>(null);
   
-  // Force the background color to be transparent and ensure it's set globally
-  useEffect(() => {
-    document.body.style.backgroundColor = 'black';
-    document.documentElement.style.backgroundColor = 'black';
-    
-    // Log that the Index component has mounted
-    console.log("Index component mounted");
-    
-    return () => {
-      document.body.style.backgroundColor = '';
-      document.documentElement.style.backgroundColor = '';
-    };
-  }, []);
+  // Simplified - removed complex scroll animation
   
   return (
-    <motion.div 
-      ref={pageRef} 
-      className="relative min-h-screen w-full text-foreground font-sans"
+    <motion.div ref={pageRef} 
+      className="min-h-screen bg-black text-foreground font-sans"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      style={{ backgroundColor: "transparent" }}
+      style={{ backgroundColor: "#000000" }}
     >
-      {/* The 3D background is rendered here with a key to force remount */}
-      <PersistentBackground3D key="persistent-background" />
       <Cursor />
-      
       <Header />
       
-      <main className="relative w-full overflow-hidden z-0" style={{ backgroundColor: "transparent" }}>
+      <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
         <HeroSection />
         
         <AppleSectionWrapper id="about-section">
