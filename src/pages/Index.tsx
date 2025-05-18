@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ProductsSection from '../components/ProductsSection';
@@ -17,36 +17,38 @@ import AppleSectionWrapper from '../components/AppleSectionWrapper';
 import PersistentBackground3D from '../components/PersistentBackground3D';
 
 const Index = () => {
-  const pageRef = React.useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
   
-  // Force the background color to be transparent on mount
+  // Force the background color to be transparent and ensure it's set globally
   useEffect(() => {
     document.body.style.backgroundColor = 'black';
+    document.documentElement.style.backgroundColor = 'black';
     
     // Log that the Index component has mounted
     console.log("Index component mounted");
     
     return () => {
       document.body.style.backgroundColor = '';
+      document.documentElement.style.backgroundColor = '';
     };
   }, []);
   
   return (
     <motion.div 
       ref={pageRef} 
-      className="min-h-screen text-foreground font-sans relative"
+      className="relative min-h-screen w-full text-foreground font-sans"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       style={{ backgroundColor: "transparent" }}
     >
-      {/* The 3D background is rendered here */}
-      <PersistentBackground3D />
+      {/* The 3D background is rendered here with a key to force remount */}
+      <PersistentBackground3D key="persistent-background" />
       <Cursor />
       
       <Header />
       
-      <main className="relative overflow-hidden z-0" style={{ backgroundColor: "transparent" }}>
+      <main className="relative w-full overflow-hidden z-0" style={{ backgroundColor: "transparent" }}>
         <HeroSection />
         
         <AppleSectionWrapper id="about-section">

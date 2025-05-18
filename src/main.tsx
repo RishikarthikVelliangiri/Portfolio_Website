@@ -8,7 +8,11 @@ import './index.css';
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Failed to find the root element");
 
+console.log("Initializing React app");
 const root = createRoot(rootElement);
 
-// Explicitly render without StrictMode at the top level
+// Render the app
 root.render(<App />);
+
+// Log to confirm rendering has completed
+console.log("React app render initiated");

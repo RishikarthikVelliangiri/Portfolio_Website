@@ -21,9 +21,11 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
+  console.log("App component rendering");
+  
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
         <TooltipProvider>
           <ScrollAnimationProvider>
             <Toaster />
@@ -35,8 +37,8 @@ const App: React.FC = () => {
             </Routes>
           </ScrollAnimationProvider>
         </TooltipProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
