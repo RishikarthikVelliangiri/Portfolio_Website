@@ -21,17 +21,19 @@ const Index = () => {
   
   return (
     <motion.div ref={pageRef} 
-      className="min-h-screen bg-black text-foreground font-sans relative"
+      className="min-h-screen text-foreground font-sans relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      style={{ backgroundColor: "#000000" }}
+      style={{ backgroundColor: "transparent" }}
     >
-      <Cursor />
+      {/* The 3D background is rendered here with higher z-index priority */}
       <PersistentBackground3D />
+      <Cursor />
+      
       <Header />
       
-      <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
+      <main className="relative overflow-hidden" style={{ backgroundColor: "transparent" }}>
         <HeroSection />
         
         <AppleSectionWrapper id="about-section">

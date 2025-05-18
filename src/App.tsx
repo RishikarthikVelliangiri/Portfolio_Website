@@ -10,14 +10,21 @@ import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 import { ScrollAnimationProvider } from "./contexts/ScrollAnimationContext";
 
-// Create a client
-const queryClient = new QueryClient();
+// Create a client with proper configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1
+    }
+  }
+});
 
 const App: React.FC = () => {
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
           <TooltipProvider>
             <ScrollAnimationProvider>
               <Toaster />
@@ -29,8 +36,8 @@ const App: React.FC = () => {
               </Routes>
             </ScrollAnimationProvider>
           </TooltipProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </QueryClientProvider>
     </React.StrictMode>
   );
 };
