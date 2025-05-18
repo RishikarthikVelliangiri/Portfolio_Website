@@ -17,6 +17,8 @@ const PersistentBackground3D = () => {
   useEffect(() => {
     if (!containerRef.current) return;
     
+    console.log("Initializing Three.js scene");
+    
     // Create scene
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -43,7 +45,7 @@ const PersistentBackground3D = () => {
     
     // Create particles
     const particleGeometry = new THREE.BufferGeometry();
-    const particleCount = 1500;
+    const particleCount = 2500;
     
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -76,10 +78,10 @@ const PersistentBackground3D = () => {
     particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.05,
+      size: 0.1,
       vertexColors: true,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.8,
       sizeAttenuation: true
     });
     
@@ -160,22 +162,18 @@ const PersistentBackground3D = () => {
     if (!particlesRef.current) return;
     
     const updateScroll = () => {
-      const scrollValue = scrollY.get();
+      const scrollValue = window.scrollY;
       if (particlesRef.current) {
         // Subtle parallax effect based on scroll position
-        particlesRef.current.position.y = -scrollValue * 0.005;
-        
-        // Adjust opacity based on scroll
-        const material = particlesRef.current.material as THREE.PointsMaterial;
-        material.opacity = Math.max(0.3, 0.7 - scrollValue * 0.0005);
+        particlesRef.current.position.y = -scrollValue * 0.001;
       }
     };
     
-    // Set up subscription to scrollY changes
-    const unsubscribeScroll = scrollY.onChange(updateScroll);
+    // Use the modern approach for onChange
+    const unsubscribe = scrollY.on("change", updateScroll);
     
     return () => {
-      unsubscribeScroll();
+      if (unsubscribe) unsubscribe();
     };
   }, [scrollY]);
 
@@ -183,7 +181,7 @@ const PersistentBackground3D = () => {
     <div 
       ref={containerRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.7 }}
+      style={{ opacity: 1 }}
       aria-hidden="true"
     />
   );

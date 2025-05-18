@@ -19,11 +19,9 @@ import PersistentBackground3D from '../components/PersistentBackground3D';
 const Index = () => {
   const pageRef = React.useRef<HTMLDivElement>(null);
   
-  // Simplified - removed complex scroll animation
-  
   return (
     <motion.div ref={pageRef} 
-      className="min-h-screen bg-black text-foreground font-sans"
+      className="min-h-screen bg-black text-foreground font-sans relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
