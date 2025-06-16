@@ -1,0 +1,10 @@
+// filepath: c:\Users\rishi\Portfolio Website\aura-display-evolve\src\components\PersistentBackground3D.tsx
+import React from 'react';
+import SimplifiedBackground3D from './SimplifiedBackground3D';
+
+const PersistentBackground3D = () => {
+  // Simply render the simplified implementation
+  return <SimplifiedBackground3D />;
+};
+
+export default PersistentBackground3D;

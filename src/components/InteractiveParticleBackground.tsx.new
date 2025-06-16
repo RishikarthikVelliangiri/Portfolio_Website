@@ -1,0 +1,566 @@
+// filepath: c:\Users\rishi\Portfolio Website\aura-display-evolve\src\components\InteractiveParticleBackground.tsx
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+
+// Optimized configuration with reduced complexity for better performance
+const PARTICLE_COUNT = 80; // Reduced count for better performance
+const PARTICLE_BASE_SIZE = 1.6;
+const PARTICLE_VARIATION = 0.6;
+const CONNECTION_DISTANCE = 100; // Slightly reduced for performance
+const CONNECTION_OPACITY_DIVIDER = 150;
+const TRAIL_LENGTH = 3; // Reduced for performance
+const INTERACTION_RADIUS = 160;
+const WAVE_SPEED = 0.002;
+const SWIRL_STRENGTH = 0.04;
+const PULSE_FREQUENCY = 0.0004;
+const GLOW_SIZE = 12;
+const FLOW_FIELD_RESOLUTION = 30; // Increased for fewer calculations
+const FLOW_FIELD_STRENGTH = 0.012;
+const PARTICLE_SPEED_MIN = 0.5;
+const PARTICLE_SPEED_MAX = 1.8;
+const ENERGY_WAVE_SPEED = 0.0002;
+const FRAME_SKIP = 2; // Only draw connections every few frames
+
+// Enhanced color theme with vibrance adjustments
+const COLORS = {
+  primary: { r: 142, g: 95, b: 250, a: 0.65 },    // Enhanced purple
+  secondary: { r: 165, g: 82, b: 255, a: 0.7 },   // Enhanced indigo
+  accent: { r: 225, g: 75, b: 245, a: 0.75 },     // Vibrant fuchsia
+  energy: { r: 210, g: 120, b: 255, a: 0.85 },    // Energy pulse color
+  glow: { r: 142, g: 95, b: 250, a: 0.18 },       // Glow effect base
+  ambient: { r: 35, g: 10, b: 60, a: 0.03 }       // Ambient background tint
+};
+
+function randomBetween(a: number, b: number) {
+  return a + Math.random() * (b - a);
+}
+
+function distanceSq(x1: number, y1: number, x2: number, y2: number): number {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  return dx * dx + dy * dy;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  vx: number;
+  vy: number;
+  ax: number;
+  ay: number;
+  angle: number;
+  speed: number;
+  size: number;
+  color: { r: number; g: number; b: number; a: number };
+  trail: { x: number; y: number; a: number }[];
+  pulse: number;
+  energyLevel: number;
+  flowOffset: number;
+}
+
+interface FlowVector {
+  angle: number;
+  strength: number;
+}
+
+interface InteractiveParticleBackgroundProps {
+  parentRef: React.RefObject<HTMLElement>;
+}
+
+const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps> = ({ parentRef }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particles = useRef<Particle[]>([]);
+  const mouse = useRef({ x: -1000, y: -1000, vx: 0, vy: 0, lastX: -1000, lastY: -1000 });
+  const animationId = useRef<number>();
+  const flowField = useRef<FlowVector[][]>([]);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const timeRef = useRef(0);
+  const energyWaveRef = useRef(0);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const frameCountRef = useRef(0);
+
+  // Track mouse movements with throttling
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!canvasRef.current || !parentRef.current) return;
+
+    const rect = parentRef.current.getBoundingClientRect();
+    const inBounds = 
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom;
+
+    const newX = inBounds ? e.clientX - rect.left : -1000;
+    const newY = inBounds ? e.clientY - rect.top : -1000;
+    
+    const lastX = mouse.current.x;
+    const lastY = mouse.current.y;
+    
+    mouse.current = {
+      x: newX,
+      y: newY,
+      vx: newX !== -1000 && lastX !== -1000 ? (newX - lastX) * 0.1 : 0,
+      vy: newY !== -1000 && lastY !== -1000 ? (newY - lastY) * 0.1 : 0,
+      lastX: lastX,
+      lastY: lastY
+    };
+    
+    setIsInteracting(inBounds);
+  }, [parentRef]);
+
+  // Track resize events
+  useEffect(() => {
+    if (!parentRef.current) return;
+    
+    const updateDimensions = (target: Element) => {
+      const { width, height } = target.getBoundingClientRect();
+      setDimensions({ width, height });
+    };
+    
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === parentRef.current) {
+          updateDimensions(entry.target);
+        }
+      }
+    });
+    
+    resizeObserver.observe(parentRef.current);
+    resizeObserverRef.current = resizeObserver;
+    
+    return () => {
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
+    };
+  }, [parentRef]);
+  
+  // Add mouse event listener
+  useEffect(() => {
+    const throttledMouseMove = (e: MouseEvent) => {
+      // Throttle mouse move events for performance
+      if (frameCountRef.current % 2 !== 0) return;
+      handleMouseMove(e);
+    };
+    
+    document.addEventListener('mousemove', throttledMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', throttledMouseMove);
+    };
+  }, [handleMouseMove]);
+
+  // Color handling functions
+  const getGradientColor = (time: number, baseColor: typeof COLORS.primary, energyLevel = 0): typeof COLORS.primary => {
+    const shift = Math.sin(time * 0.001) * 20;
+    const energyBoost = energyLevel * 30;
+    
+    return {
+      r: Math.min(255, Math.max(0, baseColor.r + shift * 0.5 + energyBoost)),
+      g: Math.min(255, Math.max(0, baseColor.g + shift * 0.3 + energyBoost * 0.7)),
+      b: Math.min(255, Math.max(0, baseColor.b + shift + energyBoost * 0.5)),
+      a: baseColor.a
+    };
+  };
+
+  const blendColors = (color1: typeof COLORS.primary, color2: typeof COLORS.primary, ratio: number): typeof COLORS.primary => {
+    return {
+      r: color1.r * (1 - ratio) + color2.r * ratio,
+      g: color1.g * (1 - ratio) + color2.g * ratio,
+      b: color1.b * (1 - ratio) + color2.b * ratio,
+      a: color1.a * (1 - ratio) + color2.a * ratio
+    };
+  };
+
+  // Generate simplified flow field
+  const generateFlowField = useCallback((width: number, height: number, time: number) => {
+    const cols = Math.ceil(width / FLOW_FIELD_RESOLUTION);
+    const rows = Math.ceil(height / FLOW_FIELD_RESOLUTION);
+    const field: FlowVector[][] = [];
+    
+    for (let x = 0; x < cols; x++) {
+      field[x] = [];
+      for (let y = 0; y < rows; y++) {
+        // Simplified pattern calculation
+        const angle = (
+          Math.sin(x * 0.05 + time * 0.0002) * 
+          Math.cos(y * 0.05 + time * 0.0001) * Math.PI * 2
+        );
+        
+        const strength = 
+          (Math.sin(x * 0.1 + time * 0.0003) + 1) * 0.5 * 
+          FLOW_FIELD_STRENGTH;
+        
+        field[x][y] = { angle, strength };
+      }
+    }
+    
+    return field;
+  }, []);
+
+  // Main particle system effect
+  useEffect(() => {
+    if (!parentRef?.current) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    // Update canvas size
+    if (dimensions.width > 0 && dimensions.height > 0) {
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
+    } else if (parentRef.current) {
+      const { width, height } = parentRef.current.getBoundingClientRect();
+      canvas.width = width;
+      canvas.height = height;
+      setDimensions({ width, height });
+    }
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Set up blending and initialize particles if needed
+    ctx.globalCompositeOperation = 'screen';
+
+    // Initialize particles only if they don't already exist
+    if (!particles.current.length) {
+      // Generate initial flow field
+      flowField.current = generateFlowField(width, height, 0);
+      
+      // Initialize particles
+      particles.current = Array.from({ length: PARTICLE_COUNT }, () => {
+        const angle = randomBetween(0, Math.PI * 2);
+        const radius = randomBetween(0.1, 0.45) * Math.min(width, height);
+        const baseX = width / 2 + Math.cos(angle) * radius;
+        const baseY = height / 2 + Math.sin(angle) * radius;
+        
+        // Simplified color assignment
+        const colorRatio = Math.random();
+        let color;
+        
+        if (colorRatio < 0.33) {
+          color = COLORS.primary;
+        } else if (colorRatio < 0.66) {
+          color = COLORS.secondary;
+        } else {
+          color = COLORS.accent;
+        }
+        
+        // Initialize trail
+        const trail = Array(TRAIL_LENGTH).fill(null).map(() => ({
+          x: baseX, 
+          y: baseY,
+          a: 1.0
+        }));
+        
+        return {
+          x: baseX,
+          y: baseY,
+          baseX,
+          baseY,
+          vx: 0,
+          vy: 0,
+          ax: 0,
+          ay: 0,
+          angle: randomBetween(0, Math.PI * 2),
+          speed: randomBetween(PARTICLE_SPEED_MIN, PARTICLE_SPEED_MAX),
+          size: PARTICLE_BASE_SIZE + randomBetween(-PARTICLE_VARIATION, PARTICLE_VARIATION),
+          color,
+          trail,
+          pulse: Math.random() * Math.PI * 2,
+          energyLevel: randomBetween(0, 0.3),
+          flowOffset: randomBetween(0, Math.PI * 2)
+        };
+      });
+    }
+
+    // Draw background
+    const drawBackground = () => {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'; // Slightly more opaque for faster fading trails
+      ctx.fillRect(0, 0, width, height);
+      
+      // Simplified ambient glow
+      ctx.globalCompositeOperation = 'screen';
+      const ambientGlow = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width * 0.7);
+      ambientGlow.addColorStop(0, `rgba(${COLORS.ambient.r}, ${COLORS.ambient.g}, ${COLORS.ambient.b}, ${COLORS.ambient.a * 1.5})`);
+      ambientGlow.addColorStop(1, `rgba(${COLORS.ambient.r}, ${COLORS.ambient.g}, ${COLORS.ambient.b}, 0)`);
+      ctx.fillStyle = ambientGlow;
+      ctx.fillRect(0, 0, width, height);
+    };
+    
+    // Draw energy wave
+    const drawEnergyWave = () => {
+      if (isInteracting && mouse.current.x !== -1000) {
+        const energyWave = ctx.createRadialGradient(
+          mouse.current.x, 
+          mouse.current.y, 
+          0,
+          mouse.current.x,
+          mouse.current.y,
+          INTERACTION_RADIUS * (0.5 + Math.sin(energyWaveRef.current) * 0.5)
+        );
+        
+        const waveOpacity = (Math.sin(energyWaveRef.current * 2) + 1) * 0.05;
+        energyWave.addColorStop(0, `rgba(${COLORS.energy.r}, ${COLORS.energy.g}, ${COLORS.energy.b}, ${waveOpacity * 2})`);
+        energyWave.addColorStop(0.5, `rgba(${COLORS.energy.r}, ${COLORS.energy.g}, ${COLORS.energy.b}, ${waveOpacity})`);
+        energyWave.addColorStop(1, `rgba(${COLORS.energy.r}, ${COLORS.energy.g}, ${COLORS.energy.b}, 0)`);
+        
+        ctx.beginPath();
+        ctx.fillStyle = energyWave;
+        ctx.arc(mouse.current.x, mouse.current.y, INTERACTION_RADIUS * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+    
+    // Draw connections between particles - only on certain frames
+    const drawConnections = () => {
+      if (frameCountRef.current % FRAME_SKIP !== 0) return;
+      
+      ctx.lineWidth = 0.6;
+      
+      for (let i = 0; i < particles.current.length; i += 2) { // Skip every other particle for performance
+        const p1 = particles.current[i];
+        
+        // Only check against nearby particles
+        for (let j = i + 2; j < particles.current.length; j += 2) {
+          const p2 = particles.current[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const distSq = dx * dx + dy * dy;
+          
+          // Distance check using square of distance (more efficient)
+          const connectionDistSq = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
+          if (distSq < connectionDistSq) {
+            const dist = Math.sqrt(distSq);
+            const opacity = (CONNECTION_DISTANCE - dist) / CONNECTION_OPACITY_DIVIDER;
+            
+            // Simplified connection color
+            const energyFactor = (p1.energyLevel + p2.energyLevel) * 0.5;
+            const basedColor = energyFactor > 0.6 ? COLORS.energy : 
+                              blendColors(p1.color, p2.color, 0.5);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${basedColor.r}, ${basedColor.g}, ${basedColor.b}, ${opacity * basedColor.a})`;
+            
+            // Simple line for better performance
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+    };
+    
+    // Update a particle's physics
+    const updateParticle = (p: Particle, dt: number) => {
+      // Update pulse phase and energy
+      p.pulse += PULSE_FREQUENCY * dt * p.speed;
+      
+      const timeFactor = Math.sin(timeRef.current * 0.0005 + p.angle);
+      const interactionEnergy = isInteracting ? 0.15 : 0;
+      p.energyLevel = Math.max(0, Math.min(0.8, 
+        p.energyLevel * 0.98 + 
+        timeFactor * 0.02 + 
+        interactionEnergy
+      ));
+      
+      // Update base position with swirl motion
+      p.angle += WAVE_SPEED * p.speed * dt;
+      p.baseX = width / 2 + Math.cos(p.angle) * 0.38 * Math.min(width, height);
+      p.baseY = height / 2 + Math.sin(p.angle) * 0.38 * Math.min(width, height);
+      
+      // Apply flow field - simplified lookup
+      const col = Math.floor(p.x / FLOW_FIELD_RESOLUTION);
+      const row = Math.floor(p.y / FLOW_FIELD_RESOLUTION);
+      
+      if (flowField.current && 
+          col >= 0 && col < flowField.current.length && 
+          row >= 0 && flowField.current[col] && row < flowField.current[col].length) {
+        
+        const flow = flowField.current[col][row];
+        const flowAngle = flow.angle + p.flowOffset;
+        p.ax = Math.cos(flowAngle) * flow.strength * dt;
+        p.ay = Math.sin(flowAngle) * flow.strength * dt;
+      }
+      
+      // Mouse interaction - simplified
+      if (isInteracting && mouse.current.x !== -1000) {
+        const dx = p.x - mouse.current.x;
+        const dy = p.y - mouse.current.y;
+        const distSq = dx * dx + dy * dy;
+        
+        if (distSq < INTERACTION_RADIUS * INTERACTION_RADIUS) {
+          const dist = Math.sqrt(distSq);
+          const force = (INTERACTION_RADIUS - dist) / INTERACTION_RADIUS;
+          const angle = Math.atan2(dy, dx);
+          
+          // Repulsion force
+          p.ax += Math.cos(angle) * force * 0.15 * dt;
+          p.ay += Math.sin(angle) * force * 0.15 * dt;
+          
+          // Simplified swirl
+          const perpAngle = angle + Math.PI / 2;
+          p.ax += Math.cos(perpAngle) * force * 0.3 * dt;
+          p.ay += Math.sin(perpAngle) * force * 0.3 * dt;
+          
+          // Energy boost near mouse
+          p.energyLevel = Math.min(0.8, p.energyLevel + force * 0.04);
+        }
+      }
+      
+      // Spring back to base
+      p.ax += (p.baseX - p.x) * 0.01 * dt;
+      p.ay += (p.baseY - p.y) * 0.01 * dt;
+      
+      // Global swirl
+      const swirlAngle = Math.atan2(p.y - height / 2, p.x - width / 2) + Math.PI / 2;
+      p.ax += Math.cos(swirlAngle) * SWIRL_STRENGTH * dt;
+      p.ay += Math.sin(swirlAngle) * SWIRL_STRENGTH * dt;
+      
+      // Update velocity
+      p.vx += p.ax;
+      p.vy += p.ay;
+      
+      // Reset acceleration
+      p.ax = 0;
+      p.ay = 0;
+      
+      // Apply damping
+      p.vx *= 0.92;
+      p.vy *= 0.92;
+      
+      // Update position
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      
+      // Keep particles within bounds
+      if (p.x < 0) p.x = 0;
+      else if (p.x > width) p.x = width;
+      if (p.y < 0) p.y = 0;
+      else if (p.y > height) p.y = height;
+      
+      // Update trail
+      p.trail.pop();
+      p.trail.unshift({
+        x: p.x,
+        y: p.y,
+        a: 1.0
+      });
+    };
+    
+    // Draw a particle
+    const drawParticle = (p: Particle) => {
+      const dynamicColor = p.color;
+      const pulseSize = 1 + Math.sin(p.pulse) * 0.2;
+      const size = p.size * pulseSize;
+      
+      // Only draw trail if energy level is high enough
+      if (p.energyLevel > 0.2) {
+        ctx.globalCompositeOperation = 'screen';
+        // Draw just 2 trail segments for performance
+        for (let t = 0; t < Math.min(p.trail.length, 2); t++) {
+          const trailPos = p.trail[t];
+          const trailRatio = (TRAIL_LENGTH - t) / TRAIL_LENGTH;
+          const trailAlpha = trailRatio * 0.3;
+          
+          const trailColor = `rgba(${dynamicColor.r}, ${dynamicColor.g}, ${dynamicColor.b}, ${trailAlpha})`;
+          ctx.beginPath();
+          ctx.fillStyle = trailColor;
+          ctx.arc(trailPos.x, trailPos.y, size * trailRatio * 0.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      
+      // Simplified glow effect
+      if (p.energyLevel > 0.4) {
+        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, GLOW_SIZE);
+        glow.addColorStop(0, `rgba(${dynamicColor.r}, ${dynamicColor.g}, ${dynamicColor.b}, ${dynamicColor.a * 0.5})`);
+        glow.addColorStop(1, `rgba(${dynamicColor.r}, ${dynamicColor.g}, ${dynamicColor.b}, 0)`);
+        
+        ctx.beginPath();
+        ctx.fillStyle = glow;
+        ctx.arc(p.x, p.y, GLOW_SIZE, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Main particle
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${dynamicColor.r}, ${dynamicColor.g}, ${dynamicColor.b}, ${dynamicColor.a})`;
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    
+    // Animation loop
+    let lastTime = performance.now();
+    
+    function animate(now: number) {
+      const dt = Math.min((now - lastTime) / 16.67, 2);
+      lastTime = now;
+      timeRef.current += dt;
+      frameCountRef.current++;
+      
+      // Update flow field less frequently
+      if (frameCountRef.current % 60 === 0) {
+        flowField.current = generateFlowField(width, height, timeRef.current);
+        energyWaveRef.current += ENERGY_WAVE_SPEED * 60;
+      } else {
+        energyWaveRef.current += ENERGY_WAVE_SPEED * dt;
+      }
+      
+      // Draw background and energy effects
+      drawBackground();
+      drawEnergyWave();
+      
+      // Draw connections (every few frames)
+      drawConnections();
+      
+      // Update and draw particles
+      ctx.globalCompositeOperation = 'screen';
+      
+      for (let i = 0; i < particles.current.length; i++) {
+        const p = particles.current[i];
+        updateParticle(p, dt);
+        drawParticle(p);
+      }
+      
+      animationId.current = requestAnimationFrame(animate);
+    }
+    
+    animationId.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationId.current) cancelAnimationFrame(animationId.current);
+    };
+  }, [parentRef, dimensions, isInteracting, generateFlowField]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        pointerEvents: 'none', // Let mouse events pass through to content
+        background: 'transparent',
+        display: 'block',
+        mixBlendMode: 'screen', // Apply screen blend mode for better integration with background
+        willChange: 'transform', // Performance optimization hint
+      }}
+      aria-hidden="true"
+      data-testid="interactive-particle-background"
+    />
+  );
+};
+
+// Memoize the component to prevent unnecessary re-renders
+export default React.memo(InteractiveParticleBackground);

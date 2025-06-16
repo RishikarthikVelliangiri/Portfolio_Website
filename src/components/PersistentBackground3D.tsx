@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // Component completely disabled to resolve scrolling issues

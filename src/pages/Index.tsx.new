@@ -1,0 +1,73 @@
+import React from 'react';
+import Header from '../components/Header';
+import HeroSection from '../components/HeroSection';
+import ProductsSection from '../components/ProductsSection';
+import VisionSection from '../components/VisionSection';
+import ContactSection from '../components/ContactSection';
+import Cursor from '../components/Cursor';
+import AboutSection from '../components/AboutSection';
+import '../index.css';
+import SkillsSection from '../components/SkillsSection';
+import ExperienceSection from '../components/ExperienceSection';
+import EducationSection from '../components/EducationSection';
+import AwardsSection from '../components/AwardsSection';
+import AppleSectionWrapper from '../components/AppleSectionWrapper';
+import PersistentBackground3D from '../components/PersistentBackground3D';
+import DebugPanel from '../components/DebugPanel';
+
+const Index = () => {
+  const pageRef = React.useRef<HTMLDivElement>(null);
+  
+  return (
+    <div ref={pageRef} className="min-h-screen bg-black text-foreground font-sans relative" style={{ backgroundColor: "#000000" }}>
+      {/* Background container with no overflow restriction */}
+      <div className="absolute inset-0 w-full h-full z-0" style={{ contain: "none" }}>
+        <PersistentBackground3D />
+      </div>
+
+      <div className="relative z-10" style={{ isolation: "isolate" }}>
+        <DebugPanel />
+        <Cursor />
+        <Header />
+        
+        <main className="relative overflow-hidden bg-transparent" style={{ backgroundColor: "transparent" }}>
+          <HeroSection />
+          
+          <AppleSectionWrapper id="about-section">
+            <AboutSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="skills-section">
+            <SkillsSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="experience-section">
+            <ExperienceSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="projects-section">
+            <ProductsSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="education-section">
+            <EducationSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="awards-section">
+            <AwardsSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="vision-section">
+            <VisionSection />
+          </AppleSectionWrapper>
+          
+          <AppleSectionWrapper id="contact-section">
+            <ContactSection />
+          </AppleSectionWrapper>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Index;

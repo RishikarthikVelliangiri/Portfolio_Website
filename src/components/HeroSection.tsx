@@ -1,13 +1,14 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSectionAnimation } from '../hooks/useSectionAnimation';
+import InteractiveParticleBackground from './InteractiveParticleBackground';
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-    const { progress, inView } = useSectionAnimation({
+  const particleRef = useRef<HTMLDivElement>(null);
+  const { progress, inView } = useSectionAnimation({
     threshold: 0.2,
     rootMargin: "-20px"
   });
@@ -129,7 +130,9 @@ const HeroSection = () => {
         paddingBottom: "2px", /* Add padding to prevent visual gap */
         borderBottom: "0px solid #000000" /* Ensure no border */
       }}
-    >
+    >      <div ref={particleRef} className="absolute inset-0 w-full h-full z-0">
+        <InteractiveParticleBackground parentRef={particleRef} />
+      </div>
       {/* Subtle gradient overlay to enhance text readability over 3D background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent z-[1]" />
         

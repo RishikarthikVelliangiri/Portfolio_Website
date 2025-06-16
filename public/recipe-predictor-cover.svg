@@ -1,0 +1,58 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with soft beige -->
+  <ellipse cx="200" cy="150" rx="180" ry="120" fill="#E8D5C4" opacity="0.8"/>
+  
+  <!-- Cutting board -->
+  <path d="M50 180 Q50 170 60 170 L340 170 Q350 170 350 180 L350 220 Q350 240 340 240 L60 240 Q50 240 50 220 Z" 
+        fill="#8B7355" stroke="#5D4E37" stroke-width="2"/>
+  
+  <!-- Knife handle -->
+  <rect x="30" y="200" width="40" height="12" rx="6" fill="#4A4A4A" stroke="#333" stroke-width="1"/>
+  <!-- Knife blade -->
+  <path d="M70 200 Q90 195 120 200 Q125 205 120 210 Q90 215 70 210 Z" 
+        fill="#C0C0C0" stroke="#999" stroke-width="1"/>
+  
+  <!-- Cheese block (yellow) -->
+  <rect x="140" y="120" width="45" height="35" rx="3" fill="#F4D03F" stroke="#D4AC0D" stroke-width="2"/>
+  <!-- Cheese holes -->
+  <circle cx="150" cy="130" r="3" fill="#E67E22"/>
+  <circle cx="165" cy="135" r="2" fill="#E67E22"/>
+  <circle cx="175" cy="130" r="2" fill="#E67E22"/>
+  <circle cx="160" cy="145" r="3" fill="#E67E22"/>
+  
+  <!-- Tomato slices -->
+  <ellipse cx="250" cy="140" rx="20" ry="15" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+  <ellipse cx="250" cy="140" rx="15" ry="10" fill="#EC7063"/>
+  <!-- Tomato seeds -->
+  <circle cx="245" cy="138" r="1" fill="#FFFFFF"/>
+  <circle cx="255" cy="142" r="1" fill="#FFFFFF"/>
+  <circle cx="250" cy="145" r="1" fill="#FFFFFF"/>
+  
+  <ellipse cx="290" cy="145" rx="20" ry="15" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+  <ellipse cx="290" cy="145" rx="15" ry="10" fill="#EC7063"/>
+  <!-- Tomato seeds -->
+  <circle cx="285" cy="143" r="1" fill="#FFFFFF"/>
+  <circle cx="295" cy="147" r="1" fill="#FFFFFF"/>
+  <circle cx="290" cy="150" r="1" fill="#FFFFFF"/>
+  
+  <!-- Lettuce/Greens -->
+  <path d="M80 160 Q70 150 85 145 Q95 140 110 145 Q120 150 115 160 Q110 170 100 165 Q90 160 85 165 Q75 170 80 160 Z" 
+        fill="#58D68D" stroke="#28B463" stroke-width="2"/>
+  <path d="M100 165 Q90 155 105 150 Q115 145 130 150 Q140 155 135 165 Q130 175 120 170 Q110 165 105 170 Q95 175 100 165 Z" 
+        fill="#52C764" stroke="#28B463" stroke-width="2"/>
+  <path d="M200 165 Q190 155 205 150 Q215 145 230 150 Q240 155 235 165 Q230 175 220 170 Q210 165 205 170 Q195 175 200 165 Z" 
+        fill="#5DADE2" stroke="#3498DB" stroke-width="2"/>
+  
+  <!-- Ham/Meat slices -->
+  <ellipse cx="160" cy="185" rx="25" ry="18" fill="#F1948A" stroke="#E74C3C" stroke-width="2"/>
+  <ellipse cx="160" cy="185" rx="20" ry="13" fill="#F5B7B1"/>
+  
+  <ellipse cx="220" cy="190" rx="25" ry="18" fill="#D7BDE2" stroke="#8E44AD" stroke-width="2"/>
+  <ellipse cx="220" cy="190" rx="20" ry="13" fill="#E8DAEF"/>
+  
+  <!-- Additional cheese slice -->
+  <rect x="270" y="175" width="35" height="25" rx="3" fill="#F7DC6F" stroke="#F1C40F" stroke-width="2"/>
+  <circle cx="280" cy="185" r="2" fill="#E67E22"/>
+  <circle cx="290" cy="190" r="2" fill="#E67E22"/>
+  <circle cx="295" cy="180" r="1" fill="#E67E22"/>
+</svg>

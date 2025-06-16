@@ -255,7 +255,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-medium mb-1">Location</h3>
-                    <p className="text-gray-400">Bengaluru, Karnataka</p>
+                    <p className="text-gray-400">Brentwood, Tennessee</p>
                   </div>
                 </div>
               </motion.div>

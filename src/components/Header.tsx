@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useScrollAnimation } from '../contexts/ScrollAnimationContext';
 import { motion, useTransform, useMotionValue } from 'framer-motion';
@@ -8,6 +7,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY, scrollDirection } = useScrollAnimation();
+  const headerRef = useRef<HTMLElement>(null);
   
   // Create a local motion value for tracking scroll direction numeric value
   const scrollDirectionValue = useMotionValue(0);
@@ -57,6 +57,7 @@ const Header = () => {
 
   return (
     <motion.header 
+      ref={headerRef}
       style={{ 
         y: headerY,
         opacity: headerOpacity
@@ -65,7 +66,7 @@ const Header = () => {
         isScrolled ? 'bg-black/30 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-6'
       }`}
     >
-      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+      <div className="container mx-auto px-4 md:px-6 flex justify-between items-center relative z-10">
         <div className="flex items-center">
           <span className="text-2xl font-display font-bold text-gradient">RISHI</span>
         </div>

@@ -5,21 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Code, Gamepad2, FileText } from 'lucide-react';
 
 // Real projects data
-const projects: Product[] = [
-  {
+const projects: Product[] = [  {
     id: '1',
     title: 'Synthetica',
     category: 'AI Tool',
-    imageUrl: 'https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/synthetica-logo.svg',
     description: 'An AI-powered synthetic data generator that can output data in various formats.',
     link: 'https://synthetica-beta-vercel-6v24s9y0g.vercel.app/',
     github: 'https://github.com/RishikarthikVelliangiri/synthetica'
-  },
-  {
+  },  {
     id: '2',
     title: 'Recipe Score Predictor',
     category: 'Machine Learning',
-    imageUrl: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    imageUrl: '/recipe-predictor-cover.svg',
     description: 'Using a dataset of recipes and reviews, this Streamlit app predicts recipe scores based on user-adjustable features.',
     link: 'https://buan304project.streamlit.app/',
     github: 'https://github.com/RishikarthikVelliangiri/recipe-predictor'
