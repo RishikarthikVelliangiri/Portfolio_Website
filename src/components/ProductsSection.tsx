@@ -5,16 +5,27 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Github, Code, Gamepad2, FileText } from 'lucide-react';
 
 // Real projects data
-const projects: Product[] = [  {
+const projects: Product[] = [
+  {
     id: '1',
+    title: 'AI SaaS Architect Genesis',
+    category: 'AI Tool',
+    imageUrl: '/ai-saas-architect-cover.svg',
+    description: 'An AI-powered service that generates comprehensive workflows and tech stack recommendations for SaaS ideas provided by users.',
+    link: 'https://saa-s-workflow-generator.vercel.app/',
+    github: 'https://github.com/RishikarthikVelliangiri/SaaS-Workflow-Generator'
+  },
+  {
+    id: '2',
     title: 'Synthetica',
     category: 'AI Tool',
     imageUrl: '/synthetica-logo.svg',
     description: 'An AI-powered synthetic data generator that can output data in various formats.',
     link: 'https://synthetica-beta-vercel-6v24s9y0g.vercel.app/',
     github: 'https://github.com/RishikarthikVelliangiri/synthetica'
-  },  {
-    id: '2',
+  },
+  {
+    id: '3',
     title: 'Recipe Score Predictor',
     category: 'Machine Learning',
     imageUrl: '/recipe-predictor-cover.svg',
@@ -23,7 +34,7 @@ const projects: Product[] = [  {
     github: 'https://github.com/RishikarthikVelliangiri/recipe-predictor'
   },
   {
-    id: '3',
+    id: '4',
     title: 'Instagram Reposter',
     category: 'Automation',
     imageUrl: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -31,7 +42,7 @@ const projects: Product[] = [  {
     github: 'https://github.com/RishikarthikVelliangiri/instagram-reposter'
   },
   {
-    id: '4',
+    id: '5',
     title: 'VoceDraftAI',
     category: 'AI Tool',
     imageUrl: 'https://images.unsplash.com/photo-1633432695901-72db694341ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -39,21 +50,13 @@ const projects: Product[] = [  {
     github: 'https://github.com/RishikarthikVelliangiri/voce-draft-ai'
   },
   {
-    id: '5',
+    id: '6',
     title: 'VR Goalkeeper Simulator',
     category: 'VR Game',
     imageUrl: 'https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     description: 'A goalkeeper game designed for VR headsets using Unity. Users load into a menu to start the game and must block 10 penalty shots to obtain a high score.',
     github: 'https://github.com/RishikarthikVelliangiri/Graphics_Unity',
     status: 'Under Development'
-  },
-  {
-    id: '6',
-    title: 'PDF Chatbot',
-    category: 'AI Tool',
-    imageUrl: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    description: 'A chat-based software using Gemini API and Pinecone vector database. Upload a PDF and the AI answers questions based on the document content. Supports multiple chats.',
-    github: 'https://github.com/RishikarthikVelliangiri/PDF_Chatbot'
   }
 ];
 

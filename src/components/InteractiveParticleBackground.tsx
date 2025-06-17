@@ -185,13 +185,11 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
       if (entries[0]) updateSize();
     });
     
-    resizeObserver.observe(parentRef.current);
-    
-    // Track mouse movements for interaction
+    resizeObserver.observe(parentRef.current);    // Track mouse movements for interaction
     const handleMouseMove = (e: MouseEvent) => {
       if (!canvasRef.current || !parentRef.current) return;
       
-      const rect = parentRef.current.getBoundingClientRect();
+      const rect = canvasRef.current.getBoundingClientRect();
       const inBounds = 
         e.clientX >= rect.left &&
         e.clientX <= rect.right &&
@@ -210,13 +208,33 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
         mouse.current.lastY = mouse.current.y;
         mouse.current.x = newX;
         mouse.current.y = newY;
+        
+        // Debug mouse movement
+        if (frameCountRef.current % 30 === 0) {
+          console.log(`Mouse: ${newX.toFixed(1)}, ${newY.toFixed(1)}, Speed: ${Math.sqrt(mouse.current.vx * mouse.current.vx + mouse.current.vy * mouse.current.vy).toFixed(1)}`);
+        }
       } else {
         mouse.current.x = -1000;
         mouse.current.y = -1000;
       }
     };
+
+    const handleMouseEnter = () => {
+      setIsInteracting(true);
+      console.log('Mouse entered particle canvas');
+    };
+
+    const handleMouseLeave = () => {
+      setIsInteracting(false);
+      mouse.current.x = -1000;
+      mouse.current.y = -1000;
+      console.log('Mouse left particle canvas');
+    };
     
-    window.addEventListener('mousemove', handleMouseMove);
+    // Add event listeners to canvas for better interaction
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseenter', handleMouseEnter);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
     
     // Initialize flow field
     const width = canvas.width;
@@ -233,7 +251,7 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
         let size = PARTICLE_BASE_SIZE + Math.random() * PARTICLE_VARIATION;
         let color = { ...COLORS.primary };
         let angle = Math.random() * Math.PI * 2;
-        let orbitSpeed = randomBetween(0.001, 0.003) * (Math.random() > 0.5 ? 1 : -1);
+        let orbitSpeed = randomBetween(0.008, 0.02) * (Math.random() > 0.5 ? 1 : -1);
         
         // Position based on distribution
         switch (distribution) {
@@ -672,10 +690,14 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
       } else {
         p.energyLevel = Math.max(0.1, p.energyLevel * 0.996);
       }
-      
-      // Orbital motion - based on angle and distance from center
+        // Orbital motion - based on angle and distance from center
       // This creates the basic circular orbit of particles
       p.angle += p.orbitSpeed * dt;
+      
+      // Update base positions for orbital motion
+      const targetRadius = distance(p.baseX, p.baseY, centerX, centerY);
+      p.baseX = centerX + Math.cos(p.angle) * targetRadius;
+      p.baseY = centerY + Math.sin(p.angle) * targetRadius;
       
       // Flow field influence - only apply to non-ring particles for more stability in rings
       if (p.distribution !== ParticleDistribution.RING_INNER && 
@@ -1038,8 +1060,7 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
         ctx.fill();
       }
     };
-    
-    // Animation frame
+      // Animation frame
     const animate = () => {
       if (!ctx) return;
       
@@ -1048,6 +1069,11 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
       lastFrameTime.current = now;
       timeRef.current += dt;
       frameCountRef.current++;
+      
+      // Debug output occasionally
+      if (frameCountRef.current % 300 === 0) {
+        console.log(`Particles: ${particles.current.length}, Mouse: ${mouse.current.x}, ${mouse.current.y}, Interacting: ${isInteracting}`);
+      }
       
       // Update flow field less frequently
       if (frameCountRef.current % 60 === 0) {
@@ -1084,15 +1110,18 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
       animationId.current = requestAnimationFrame(animate);
     };
     
-    animationId.current = requestAnimationFrame(animate);
-      return () => {
+    animationId.current = requestAnimationFrame(animate);    return () => {
       if (animationId.current) cancelAnimationFrame(animationId.current);
       resizeObserver.disconnect();
-      window.removeEventListener('mousemove', handleMouseMove); // Clean up the event listener
+      // Clean up canvas event listeners
+      if (canvas) {
+        canvas.removeEventListener('mousemove', handleMouseMove);
+        canvas.removeEventListener('mouseenter', handleMouseEnter);
+        canvas.removeEventListener('mouseleave', handleMouseLeave);
+      }
     };
   }, [parentRef]);
-  return (
-    <canvas
+  return (    <canvas
       ref={canvasRef}
       style={{
         position: 'absolute',
@@ -1106,6 +1135,7 @@ const InteractiveParticleBackground: React.FC<InteractiveParticleBackgroundProps
         display: 'block',
         mixBlendMode: 'screen',
         willChange: 'transform',
+        cursor: 'crosshair', // Add cursor style to indicate interactivity
       }}
       aria-hidden="true"
       data-testid="interactive-particle-background"

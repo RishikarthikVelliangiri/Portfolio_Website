@@ -72,7 +72,7 @@ To connect a domain, navigate to Project > Settings > Domains and click Connect 
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
-# Portfolio Website: Aura Display Evolve
+# Rishikarthik Portfolio
 
 This repository contains the source code for a modern, interactive portfolio website designed to showcase projects, skills, and experience with a focus on sophisticated design and smooth user experience.
 
